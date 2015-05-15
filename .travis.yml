@@ -1,2 +1,4 @@
 language: java
-script: mvn -B clean test findbugs:findbugs checkstyle:checkstyle pmd:pmd jacoco:report coveralls:report
+script: mvn -B clean verify findbugs:findbugs checkstyle:checkstyle pmd:pmd
+after_success:
+  - mvn clean test jacoco:report coveralls:report
