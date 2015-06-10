@@ -3,19 +3,31 @@ package com.plenigo.sdk.util;
 import com.plenigo.sdk.internal.util.CookieParser;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.HttpCookie;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.internal.util.CookieParser}.
+ * Tests for {@link CookieParser}.
  * </p>
  */
 public class CookieParserTest {
+
+    @Test
+    public void testConstructorIsPrivate() throws Exception {
+        Constructor constructor = CookieParser.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
+
 
     /**
      * This method tests an {@link com.plenigo.sdk.internal.util.CookieParser#getCustomerCookie(String)}
@@ -52,7 +64,6 @@ public class CookieParserTest {
 
     @Test
     public void testReturnNullWhenCookieIsNull() {
-        String cookieValue = CookieParser.extractCookieValue(CookieParser.PLENIGO_USER_COOKIE_NAME, null);
-        assertNull(cookieValue);
+        assertNull(CookieParser.extractCookieValue(CookieParser.PLENIGO_USER_COOKIE_NAME, null));
     }
 }

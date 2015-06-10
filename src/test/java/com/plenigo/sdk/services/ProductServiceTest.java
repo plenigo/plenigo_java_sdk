@@ -6,7 +6,12 @@ import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.RestClient;
+import com.plenigo.sdk.models.CategoryData;
+import com.plenigo.sdk.models.CategoryInfo;
+import com.plenigo.sdk.models.PagedList;
 import com.plenigo.sdk.models.ProductData;
+import com.plenigo.sdk.models.ProductInfo;
+import com.plenigo.sdk.models.ValidityTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -17,12 +22,19 @@ import org.powermock.reflect.Whitebox;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -35,6 +47,15 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({EncryptionUtils.class, PlenigoManager.class, RestClient.class})
 public class ProductServiceTest {
+
+    @Test
+    public void testConstructorIsPrivate() throws Exception {
+        Constructor constructor = ProductService.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
+
 
     @Test
     public void testSuccessfulGetProductData() throws Exception {
@@ -168,5 +189,150 @@ public class ProductServiceTest {
             assertNotNull(pe.getErrors());
             assertFalse(pe.getErrors().isEmpty());
         }
+    }
+
+    @Test
+    public void testGetProductListSuccessfully() throws Exception {
+        mockPlenigoManager();
+        RestClient client = Mockito.mock(RestClient.class);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //paging information
+        int totalElements = 3;
+        int pageSize = 3;
+        map.put(ApiResults.TOTAL_ELEMENTS, totalElements);
+        map.put(ApiResults.PAGE_SIZE, pageSize);
+        map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.PROD_ID, "lastId"));
+        List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
+        for(int i = 0; i < 3; i++) {
+            Map<String, String> productInformation = new HashMap<String, String>();
+            productInformation.put(ApiResults.PROD_ID, "prodId" + i);
+            productInformation.put(ApiResults.TITLE, "title" + i);
+            productInformation.put(ApiResults.DESCRIPTION, "desc" + i);
+            elements.add(productInformation);
+        }
+        map.put(ApiResults.ELEMENTS, elements);
+
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(map);
+        ProductService instance = Whitebox.invokeConstructor(ProductService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        PagedList<ProductInfo> productList = ProductService.getProductList(3, null);
+        assertNotNull(productList);
+        assertEquals(productList.getTotalElements(), totalElements);
+        assertEquals(productList.getPageSize(), pageSize);
+    }
+
+    @Test
+    public void testGetProductListSuccessfullyWithLastId() throws Exception {
+        mockPlenigoManager();
+        RestClient client = Mockito.mock(RestClient.class);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //paging information
+        int totalElements = 3;
+        int pageSize = 3;
+        map.put(ApiResults.TOTAL_ELEMENTS, totalElements);
+        map.put(ApiResults.PAGE_SIZE, pageSize);
+        map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.PROD_ID, "lastId"));
+        List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
+        for(int i = 0; i < 3; i++) {
+            Map<String, String> productInformation = new HashMap<String, String>();
+            productInformation.put(ApiResults.PROD_ID, "prodId" + i);
+            productInformation.put(ApiResults.TITLE, "title" + i);
+            productInformation.put(ApiResults.DESCRIPTION, "desc" + i);
+            elements.add(productInformation);
+        }
+        map.put(ApiResults.ELEMENTS, elements);
+
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(map);
+        ProductService instance = Whitebox.invokeConstructor(ProductService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        PagedList<ProductInfo> productList = ProductService.getProductList(3, "lastId");
+        assertNotNull(productList);
+        assertEquals(productList.getTotalElements(), totalElements);
+        assertEquals(productList.getPageSize(), pageSize);
+    }
+
+
+    @Test
+    public void testGetCategoryListSuccessfully() throws Exception {
+        mockPlenigoManager();
+        RestClient client = Mockito.mock(RestClient.class);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //paging information
+        int totalElements = 3;
+        int pageSize = 3;
+        map.put(ApiResults.TOTAL_ELEMENTS, totalElements);
+        map.put(ApiResults.PAGE_SIZE, pageSize);
+        map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.CATEGORY_ID, "lastId"));
+        List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
+        for(int i = 0; i < 3; i++) {
+            Map<String, String> categoryInformation = new HashMap<String, String>();
+            categoryInformation.put(ApiResults.CATEGORY_ID, "catId" + i);
+            categoryInformation.put(ApiResults.TITLE, "title" + i);
+            elements.add(categoryInformation);
+        }
+        map.put(ApiResults.ELEMENTS, elements);
+
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(map);
+        ProductService instance = Whitebox.invokeConstructor(ProductService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, null);
+        assertNotNull(categoryList);
+        assertEquals(categoryList.getTotalElements(), totalElements);
+        assertEquals(categoryList.getPageSize(), pageSize);
+    }
+
+
+    @Test
+    public void testGetCategoryListSuccessfullyWithLastId() throws Exception {
+        mockPlenigoManager();
+        RestClient client = Mockito.mock(RestClient.class);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //paging information
+        int totalElements = 3;
+        int pageSize = 3;
+        map.put(ApiResults.TOTAL_ELEMENTS, totalElements);
+        map.put(ApiResults.PAGE_SIZE, pageSize);
+        map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.CATEGORY_ID, "lastId"));
+        List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
+        for(int i = 0; i < 3; i++) {
+            Map<String, String> categoryInformation = new HashMap<String, String>();
+            categoryInformation.put(ApiResults.CATEGORY_ID, "catId" + i);
+            categoryInformation.put(ApiResults.TITLE, "title" + i);
+            elements.add(categoryInformation);
+        }
+        map.put(ApiResults.ELEMENTS, elements);
+
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(map);
+        ProductService instance = Whitebox.invokeConstructor(ProductService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, "lastId");
+        assertNotNull(categoryList);
+        assertEquals(categoryList.getTotalElements(), totalElements);
+        assertEquals(categoryList.getPageSize(), pageSize);
+    }
+
+
+    @Test
+    public void testGetCategoryDataSuccessfully() throws Exception {
+        mockPlenigoManager();
+        RestClient client = Mockito.mock(RestClient.class);
+        Map<String, Object> map = new HashMap<String, Object>();
+        //paging information
+        map.put(ApiResults.ID, "id");
+        map.put(ApiResults.VALIDITY_TIME, ValidityTime.DAY.getValue());
+
+
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(map);
+        ProductService instance = Whitebox.invokeConstructor(ProductService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        CategoryData data = ProductService.getCategoryData("id");
+        assertNotNull(data);
+        assertEquals(data.getId(), "id");
+        assertEquals(data.getValidityTime(), ValidityTime.DAY);
     }
 }

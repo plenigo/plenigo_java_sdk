@@ -18,6 +18,10 @@ public class PagedListTest {
     public void testToString() {
         assertNotNull(new PagedList<ProductInfo>(Collections.singletonList(new ProductInfo("prodId", "title", "desc")), new PagingInfo("", 0, 0)).toString());
     }
+    @Test
+    public void testWithEmptyPagingInfo() {
+        assertNotNull(new PagedList<ProductInfo>(Collections.singletonList(new ProductInfo("prodId", "title", "desc")), null));
+    }
 
 
     @Test

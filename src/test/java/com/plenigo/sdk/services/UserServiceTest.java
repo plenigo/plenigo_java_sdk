@@ -5,11 +5,14 @@ import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.ApiURLs;
 import com.plenigo.sdk.internal.ErrorCode;
+import com.plenigo.sdk.internal.models.Address;
 import com.plenigo.sdk.internal.services.InternalUserApiService;
+import com.plenigo.sdk.internal.util.CookieParser;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.HashUtils;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.models.ProductsBought;
+import com.plenigo.sdk.models.UserData;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +25,8 @@ import org.powermock.reflect.Whitebox;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.HttpURLConnection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,28 +47,24 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
  * Tests for {@link UserService}.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({EncryptionUtils.class, PlenigoManager.class, HashUtils.class, UserService.class, RestClient.class})
+@PrepareForTest({EncryptionUtils.class, PlenigoManager.class, HashUtils.class, RestClient.class})
 @PowerMockIgnore({"javax.crypto.*"})
 public class UserServiceTest {
     private static final String PLENIGO_USER_SAMPLE_COOKIE = "plenigo_user=sample";
+    public static final String VALID_CUSTOMER = "ci=>1234&ts=>" + System.currentTimeMillis();
+
+
+    @Test
+    public void testConstructorIsPrivate() throws Exception {
+        Constructor constructor = UserService.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 
     @Test
     public void testSuccessfulHasUserBought() throws Exception {
-        suppressConstructor(EncryptionUtils.class);
-        mockStatic(EncryptionUtils.class);
-        EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
-        PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
-        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
-
-
-        suppressConstructor(PlenigoManager.class);
-        mockStatic(PlenigoManager.class);
-        PlenigoManager mockedMgr = PowerMockito.mock(PlenigoManager.class);
-        PowerMockito.when(PlenigoManager.get()).thenReturn(mockedMgr);
-        PowerMockito.when(mockedMgr.getCompanyId()).thenReturn("CP_ID");
-
-        suppressConstructor(HashUtils.class);
-        mockStatic(HashUtils.class);
+        configurePlenigoManager();
 
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
@@ -124,19 +125,7 @@ public class UserServiceTest {
 
     @Test(expected = PlenigoException.class)
     public void testHasUserBoughtWithNotFoundException() throws Exception {
-        suppressConstructor(EncryptionUtils.class);
-        mockStatic(EncryptionUtils.class);
-        EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
-        PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
-        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
-        suppressConstructor(PlenigoManager.class);
-        mockStatic(PlenigoManager.class);
-        PlenigoManager mockedMgr = PowerMockito.mock(PlenigoManager.class);
-        PowerMockito.when(PlenigoManager.get()).thenReturn(mockedMgr);
-        PowerMockito.when(mockedMgr.getCompanyId()).thenReturn("CP_ID");
-        suppressConstructor(HashUtils.class);
-        mockStatic(HashUtils.class);
-        RestClient client = Mockito.mock(RestClient.class);
+        configurePlenigoManager();
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
         Mockito.when(internalUserApiService.hasUserBought(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
@@ -152,7 +141,7 @@ public class UserServiceTest {
         mockStatic(EncryptionUtils.class);
         EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
         PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
-        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
+        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn(VALID_CUSTOMER);
         suppressConstructor(PlenigoManager.class);
         mockStatic(PlenigoManager.class);
         PlenigoManager mockedMgr = PowerMockito.mock(PlenigoManager.class);
@@ -203,6 +192,85 @@ public class UserServiceTest {
         assertNotNull(productsBought);
         assertNotNull(productsBought.getSubscriptionProducts());
         assertEquals(1, productsBought.getSubscriptionProducts().size());
+    }
+
+
+    @Test
+    public void testSuccessfulGetProductsBoughtWithSingleProducts() throws Exception {
+        suppressConstructor(EncryptionUtils.class);
+        mockStatic(EncryptionUtils.class);
+        EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
+        PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
+        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
+
+        mockPlenigoManager();
+        suppressConstructor(HashUtils.class);
+        mockStatic(HashUtils.class);
+
+        RestClient client = PowerMockito.spy(new RestClient());
+        HttpURLConnection connection = Mockito
+                .mock(HttpURLConnection.class);
+        Mockito.when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class))
+                .withArguments(anyString(), anyString(), anyString()).thenReturn(connection);
+        String invalidParamsJson = "{\"singleProducts\":[{\"productId\":\"bbftsqC3787224694141\",\"title\":\"Test Subscription\"," +
+                "\"buyDate\":\"2014-12-10 14:08:07 +0100\",\"endDate\":\"2014-12-10 14:08:07 +0100\"}]}";
+        Mockito.when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));
+        PowerMockito.doCallRealMethod().
+                when(client,
+                        method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class))
+                .withArguments(any(HttpURLConnection.class), anyString());
+        UserService instance = Whitebox.invokeConstructor(UserService.class);
+        ReflectionTestUtils.setField(instance, "client", client);
+        ProductsBought productsBought = instance.getProductsBought(PLENIGO_USER_SAMPLE_COOKIE);
+        assertNotNull(productsBought);
+        assertNotNull(productsBought.getSinglePaymentProducts());
+        assertEquals(1, productsBought.getSinglePaymentProducts().size());
+    }
+
+
+    @Test
+    public void testUnsuccessfulGetProductsBoughtWithSingleProducts() throws Exception {
+        UserService instance = Whitebox.invokeConstructor(UserService.class);
+        ProductsBought productsBought = instance.getProductsBought(null);
+        assertNotNull(productsBought);
+        assertNotNull(productsBought.getSinglePaymentProducts());
+        assertTrue(productsBought.getSinglePaymentProducts().isEmpty());
+        assertTrue(productsBought.getSubscriptionProducts().isEmpty());
+    }
+
+    @Test
+    public void testSuccessfulIsLoggedIn() throws Exception {
+        configurePlenigoManager();
+        Assert.assertEquals("Expected logged in is different", true, UserService.isLoggedIn(CookieParser.PLENIGO_USER_COOKIE_NAME + "=" + VALID_CUSTOMER));
+    }
+
+    @Test
+    public void testSuccessfulGetUserData() throws Exception {
+        configurePlenigoManager();
+
+        UserService instance = Whitebox.invokeConstructor(UserService.class);
+        InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
+        Address addressInfo = new Address("Calle", "Adicional", "00000", "Sto Dgo", "Dom Rep");
+        UserData userData = new UserData("id", "email@sample.com", "MALE", "Torres", "Ricardo", addressInfo, "ricardo");
+        Mockito.when(internalUserApiService.getUserData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(userData);
+        ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
+        Assert.assertEquals("User data is different", userData, UserService.getUserData("123"));
+    }
+
+    private void configurePlenigoManager() throws PlenigoException {
+        suppressConstructor(EncryptionUtils.class);
+        mockStatic(EncryptionUtils.class);
+        EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
+        PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
+        PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
+
+
+     mockPlenigoManager();
+
+        suppressConstructor(HashUtils.class);
+        mockStatic(HashUtils.class);
     }
 
 

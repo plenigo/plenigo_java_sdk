@@ -13,30 +13,29 @@ import static org.junit.Assert.assertEquals;
  * </p>
  */
 public class BaseProductTest {
-
     public static final String PRODUCT_ID = "productId";
     public static final String TITLE = "title";
     public static final Date BUY_DATE = new Date();
-    private BaseProduct baseProduct;
+    BaseProduct product;
+
 
     @Before
     public void setup(){
-        baseProduct = new BaseProduct(PRODUCT_ID, TITLE, BUY_DATE);
+        product = new BaseProduct(PRODUCT_ID, TITLE, BUY_DATE);
     }
 
     @Test
-    public void testGetProductId(){
-        assertEquals("Product id is not correct", PRODUCT_ID, baseProduct.getProductId());
-    }
-
-
-    @Test
-    public void testGetTitle(){
-        assertEquals("Title is not correct", TITLE, baseProduct.getTitle());
+    public void testGetProductId() {
+        assertEquals("Product id does not match",PRODUCT_ID, product.getProductId());
     }
 
     @Test
-    public void testGetBuyDate(){
-        assertEquals("Buy date is not correct", BUY_DATE, baseProduct.getBuyDate());
+    public void testGetTitle() {
+        assertEquals("Title does not match",TITLE, product.getTitle());
+    }
+
+    @Test
+    public void testGetBuyDate() {
+        assertEquals("Buy Date does not match",BUY_DATE, product.getBuyDate());
     }
 }

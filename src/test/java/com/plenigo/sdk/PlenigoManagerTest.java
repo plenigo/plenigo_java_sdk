@@ -13,6 +13,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Map;
 
@@ -27,6 +29,15 @@ public class PlenigoManagerTest {
     private static final String COOKIE_TPL = "%s=%s;Skin=new;";
     private static final String SECRET = "THE_KEY";
     private static final String SAMPLE_COMPANY_KEY = "COMPANY-KEY";
+
+
+    @Test
+    public void testConstructorIsPrivate() throws Exception {
+        Constructor constructor = PlenigoManager.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 
     public String createCookieHeader(Long timestamp) throws PlenigoException {
         Map<String, Object> data = Collections.singletonMap("ts", (Object) timestamp.toString());
@@ -43,6 +54,7 @@ public class PlenigoManagerTest {
         assertTrue("URL was not set correctly", ApiURLs.DEFAULT_PLENIGO_URL.equals(config.getUrl()));
         assertTrue("Secret was not set correctly", SECRET.equals(config.getSecret()));
         assertTrue("Company was not set correctly", SAMPLE_COMPANY_KEY.equals(config.getCompanyId()));
+        assertTrue("URL was not set correctly", ApiURLs.DEFAULT_PLENIGO_URL.equals(instance.getUrl()));
     }
 
     @Test
