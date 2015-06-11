@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/plenigo/plenigo_java_sdk.png?branch=master)](https://travis-ci.org/plenigo/plenigo_java_sdk) [![Coverage Status](https://coveralls.io/repos/plenigo/plenigo_java_sdk/badge.svg)](https://coveralls.io/r/plenigo/plenigo_java_sdk)
+[![Build Status](https://secure.travis-ci.org/plenigo/plenigo_java_sdk.png?branch=master)](https://travis-ci.org/plenigo/plenigo_java_sdk) [![Coverage Status](https://coveralls.io/repos/plenigo/plenigo_java_sdk/badge.svg)](https://coveralls.io/r/plenigo/plenigo_java_sdk) [![Maven Release](https://img.shields.io/maven-central/v/com.plenigo/java-sdk.svg)]
 
 plenigo Java SDK
 ===============
