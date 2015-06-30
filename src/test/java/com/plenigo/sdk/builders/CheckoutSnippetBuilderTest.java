@@ -16,7 +16,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
@@ -47,13 +49,16 @@ public class CheckoutSnippetBuilderTest {
      * @return The builder to test
      */
     private CheckoutSnippetBuilder getBuilder(Product product) throws PlenigoException {
+        mockUtilities();
+        return new CheckoutSnippetBuilder(product);
+    }
+
+    private void mockUtilities() throws PlenigoException {
         suppressConstructor(EncryptionUtils.class);
-        CheckoutSnippetBuilder linkBuilder = new CheckoutSnippetBuilder(product);
         mockStatic(EncryptionUtils.class);
         EncryptionUtils mockSingleton = PowerMockito.mock(EncryptionUtils.class);
         PowerMockito.when(EncryptionUtils.get()).thenReturn(mockSingleton);
         PowerMockito.when(mockSingleton.encryptWithAES(anyString(), anyString())).thenReturn("HASH");
-        return linkBuilder;
     }
 
     /**
@@ -223,5 +228,15 @@ public class CheckoutSnippetBuilderTest {
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
                 .withCSRFToken("TOKEN");
         assertNotNull(linkBuilder.toString());
+    }
+
+
+    /**
+     * Tests the default constructor
+     */
+    @Test
+    public final void testNoArgsConstructor() throws PlenigoException {
+        mockUtilities();
+        assertNotNull(new CheckoutSnippetBuilder().build());
     }
 }

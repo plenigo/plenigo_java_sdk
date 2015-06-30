@@ -54,6 +54,11 @@ public class CheckoutSnippetBuilder {
      * The redirect URL used for the single sign on process.
      */
     private String redirectUrl;
+
+    /**
+     * This flag is used to indicate that you want to show the failed payments of the current user.
+     */
+    private Boolean failedPayments;
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
@@ -67,6 +72,13 @@ public class CheckoutSnippetBuilder {
      */
     public CheckoutSnippetBuilder(final Product productToChkOut) {
         this.product = productToChkOut;
+    }
+
+    /**
+     * Builds a checkout snippet builder with the failed payment flag set.
+     */
+    public CheckoutSnippetBuilder() {
+        this.failedPayments = true;
     }
 
     /**
@@ -107,35 +119,39 @@ public class CheckoutSnippetBuilder {
      */
     private Map<String, Object> convertToMap() {
         LOGGER.log(Level.FINEST, "Data: {0} is being added to a map.", this);
-        // LinkedHashMap is used to maintain order
-        String price = formatPriceIfNotNull(product.getPrice());
-
-        LOGGER.log(Level.FINEST, "Formatted price: {0}", price);
-
-        String taxType = null;
-        if (product.getTaxType() != null) {
-            taxType = product.getTaxType().name();
-        }
-        LOGGER.log(Level.FINEST, "Tax type: {0}", taxType);
-
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        SdkUtils.addIfNotNull(map, ApiParams.PROD_PRICE, price);
-        SdkUtils.addIfNotNull(map, ApiParams.CURRENCY, product.getCurrency());
-        SdkUtils.addIfNotNull(map, ApiParams.PROD_TAX_TYPE, taxType);
-        SdkUtils.addIfNotNull(map, ApiParams.PROD_TITLE, product.getTitle());
-        SdkUtils.addIfNotNull(map, ApiParams.PROD_ID, product.getId());
-        SdkUtils.addIfNotNull(map, ApiParams.CUSTOM_AMOUNT, product.isCustomPrice());
-        SdkUtils.addIfNotNull(map, ApiParams.INFO_SCRN_SHOWN_ON_RETRY, alreadyPayedConfirmation);
-        SdkUtils.addIfNotNull(map, ApiParams.INFO_SCRN_SHOWN_AT_END_OF_PAYMENT, paymentConfirmation);
-        SdkUtils.addIfNotNull(map, ApiParams.TEST_TRANSACTION, PlenigoManager.get().isTestMode());
-        SdkUtils.addIfNotNull(map, ApiParams.SINGLE_SIGN_ON, redirectUrl);
-        SdkUtils.addIfNotNull(map, ApiParams.CATEGORY_ID, product.getCategoryId());
-        SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
-        if (csrfToken != null) {
-            LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
-            map.put(ApiParams.CSRF_TOKEN, csrfToken);
+        if(this.failedPayments != null) {
+            map.put(ApiParams.FAILED_PAYMENT, failedPayments);
+        } else {
+            // LinkedHashMap is used to maintain order
+            String price = formatPriceIfNotNull(product.getPrice());
+
+            LOGGER.log(Level.FINEST, "Formatted price: {0}", price);
+
+            String taxType = null;
+            if (product.getTaxType() != null) {
+                taxType = product.getTaxType().name();
+            }
+            LOGGER.log(Level.FINEST, "Tax type: {0}", taxType);
+
+            SdkUtils.addIfNotNull(map, ApiParams.PROD_PRICE, price);
+            SdkUtils.addIfNotNull(map, ApiParams.CURRENCY, product.getCurrency());
+            SdkUtils.addIfNotNull(map, ApiParams.PROD_TAX_TYPE, taxType);
+            SdkUtils.addIfNotNull(map, ApiParams.PROD_TITLE, product.getTitle());
+            SdkUtils.addIfNotNull(map, ApiParams.PROD_ID, product.getId());
+            SdkUtils.addIfNotNull(map, ApiParams.CUSTOM_AMOUNT, product.isCustomPrice());
+            SdkUtils.addIfNotNull(map, ApiParams.INFO_SCRN_SHOWN_ON_RETRY, alreadyPayedConfirmation);
+            SdkUtils.addIfNotNull(map, ApiParams.INFO_SCRN_SHOWN_AT_END_OF_PAYMENT, paymentConfirmation);
+            SdkUtils.addIfNotNull(map, ApiParams.TEST_TRANSACTION, PlenigoManager.get().isTestMode());
+            SdkUtils.addIfNotNull(map, ApiParams.SINGLE_SIGN_ON, redirectUrl);
+            SdkUtils.addIfNotNull(map, ApiParams.CATEGORY_ID, product.getCategoryId());
+            SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
+            if (csrfToken != null) {
+                LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
+                map.put(ApiParams.CSRF_TOKEN, csrfToken);
+            }
+            LOGGER.log(Level.FINEST, "Map result: {0}", map);
         }
-        LOGGER.log(Level.FINEST, "Map result: {0}", map);
         return map;
     }
 
