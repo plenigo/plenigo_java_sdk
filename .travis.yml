@@ -1,8 +1,2 @@
 language: java
-before_script:
-    - git clone git@github.com:plenigo/plenigo_java_sdk_commons.git java_sdk_commons
-    - cd java_sdk_commons
-    - mvn -B clean install -DskipTests=true
-    - cd ..
-script:
-    - mvn -B clean verify findbugs:findbugs checkstyle:checkstyle pmd:pmd jacoco:report coveralls:report
+script: mvn -B clean verify findbugs:findbugs checkstyle:checkstyle pmd:pmd jacoco:report coveralls:report
