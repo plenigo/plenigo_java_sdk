@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.plenigo</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>plenigo Java SDK Commons</name>
+    <name>plenigo Java SDK</name>
 
     <description>Java SDK wrapping plenigo REST-API for easier usage.</description>
 
@@ -385,7 +385,7 @@
             <dependency>
                 <groupId>com.plenigo</groupId>
                 <artifactId>java-sdk-commons</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
