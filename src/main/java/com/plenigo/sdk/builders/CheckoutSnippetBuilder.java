@@ -120,7 +120,7 @@ public class CheckoutSnippetBuilder {
     private Map<String, Object> convertToMap() {
         LOGGER.log(Level.FINEST, "Data: {0} is being added to a map.", this);
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        if(this.failedPayments != null) {
+        if (this.failedPayments != null) {
             map.put(ApiParams.FAILED_PAYMENT, failedPayments);
         } else {
             // LinkedHashMap is used to maintain order
