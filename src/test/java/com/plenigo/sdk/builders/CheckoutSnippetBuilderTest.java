@@ -14,6 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -182,7 +183,7 @@ public class CheckoutSnippetBuilderTest {
 
     @Test
     public final void testBuildWithCategory() throws PlenigoException {
-        Product product = new Product("PRODZ","TITLE","CAT_ID");
+        Product product = new Product("PRODZ", "TITLE", "CAT_ID");
         CheckoutSnippetBuilder linkBuilder = getBuilder(product);
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
@@ -228,13 +229,18 @@ public class CheckoutSnippetBuilderTest {
         Product product = getProduct();
         product.setCustomPrice(true);
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
-                .withCSRFToken("TOKEN").withShipping(10.00, ProductType.BOOK);
+                .withCSRFToken("TOKEN").withShipping(BigDecimal.TEN, ProductType.BOOK);
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
                 + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
     }
 
+    /**
+     * Builds a product for test purposes.
+     *
+     * @return a product
+     */
     private Product getProduct() {
         return new Product(12.99, "Sample", "PROD-ID", "USD", TaxType.DOWNLOAD);
     }
@@ -247,7 +253,7 @@ public class CheckoutSnippetBuilderTest {
     public final void testInvalidShippingCost() throws PlenigoException {
         Product product = getProduct();
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
-                .withCSRFToken("TOKEN").withShipping(10.00, ProductType.VIDEO);
+                .withCSRFToken("TOKEN").withShipping(BigDecimal.TEN, ProductType.VIDEO);
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "

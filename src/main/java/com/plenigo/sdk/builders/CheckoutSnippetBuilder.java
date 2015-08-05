@@ -9,6 +9,7 @@ import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.models.ProductType;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -62,8 +63,10 @@ public class CheckoutSnippetBuilder {
      */
     private Boolean failedPayments;
 
-
-    private Double shippingCost;
+    /**
+     * Shipping costs related to the product checkout.
+     */
+    private BigDecimal shippingCost;
 
     /**
      * The checkout event template, this can be interpreted as a javascript
@@ -239,7 +242,7 @@ public class CheckoutSnippetBuilder {
      *
      * @throws PlenigoException if a validation error happens
      */
-    public CheckoutSnippetBuilder withShipping(Double shippingCost, ProductType productType) throws PlenigoException {
+    public CheckoutSnippetBuilder withShipping(BigDecimal shippingCost, ProductType productType) throws PlenigoException {
         if (!productType.isShippingAllowed()) {
             throw new PlenigoException(ErrorCode.SHIPPING_NOT_ALLOWED.getCode(), ErrorCode.SHIPPING_NOT_ALLOWED.getMsg());
         }
@@ -249,7 +252,8 @@ public class CheckoutSnippetBuilder {
 
     @Override
     public String toString() {
-        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation
-                + ", paymentConfirmation=" + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\'' + '}';
+        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation + ", paymentConfirmation="
+                + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\'' + ", failedPayments=" + failedPayments
+                + ", shippingCost=" + shippingCost + '}';
     }
 }
