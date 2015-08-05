@@ -5,6 +5,7 @@ import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.internal.ApiParams;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
+import com.plenigo.sdk.models.ProductType;
 import com.plenigo.sdk.models.TaxType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -208,10 +209,45 @@ public class CheckoutSnippetBuilderTest {
      */
     @Test
     public final void testFilledProduct() throws PlenigoException {
-        Product product = new Product(12.99, "Sample", "PROD-ID", "USD", TaxType.DOWNLOAD);
+        Product product = getProduct();
         product.setCustomPrice(true);
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
                 .withCSRFToken("TOKEN");
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
+    }
+
+
+    /**
+     * Test Product with all the parameters.
+     */
+    @Test
+    public final void testValidShippingCost() throws PlenigoException {
+        Product product = getProduct();
+        product.setCustomPrice(true);
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product)
+                .withCSRFToken("TOKEN").withShipping(10.00, ProductType.BOOK);
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
+    }
+
+    private Product getProduct() {
+        return new Product(12.99, "Sample", "PROD-ID", "USD", TaxType.DOWNLOAD);
+    }
+
+
+    /**
+     * Test Product with all the parameters.
+     */
+    @Test(expected = PlenigoException.class)
+    public final void testInvalidShippingCost() throws PlenigoException {
+        Product product = getProduct();
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product)
+                .withCSRFToken("TOKEN").withShipping(10.00, ProductType.VIDEO);
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
@@ -223,8 +259,7 @@ public class CheckoutSnippetBuilderTest {
      */
     @Test
     public final void testToString() throws PlenigoException {
-        Product product = new Product(12.99, "Sample", "PROD-ID", "USD", TaxType.DOWNLOAD);
-        product.setCustomPrice(true);
+        Product product = getProduct();
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
                 .withCSRFToken("TOKEN");
         assertNotNull(linkBuilder.toString());
