@@ -2,11 +2,14 @@ package com.plenigo.sdk.builders;
 
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
+import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.internal.ApiParams;
 import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
+import com.plenigo.sdk.models.ProductType;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -59,6 +62,12 @@ public class CheckoutSnippetBuilder {
      * This flag is used to indicate that you want to show the failed payments of the current user.
      */
     private Boolean failedPayments;
+
+    /**
+     * Shipping costs related to the product checkout.
+     */
+    private BigDecimal shippingCost;
+
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
@@ -146,6 +155,7 @@ public class CheckoutSnippetBuilder {
             SdkUtils.addIfNotNull(map, ApiParams.SINGLE_SIGN_ON, redirectUrl);
             SdkUtils.addIfNotNull(map, ApiParams.CATEGORY_ID, product.getCategoryId());
             SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
+            SdkUtils.addIfNotNull(map, ApiParams.SHIPPING_COST, shippingCost);
             if (csrfToken != null) {
                 LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
                 map.put(ApiParams.CSRF_TOKEN, csrfToken);
@@ -222,9 +232,28 @@ public class CheckoutSnippetBuilder {
         return this;
     }
 
+    /**
+     * Adds the shipping cost to the snippet builder.
+     *
+     * @param shippingCost shipping cost of product
+     * @param productType  the product type related to the product
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException if a validation error happens
+     */
+    public CheckoutSnippetBuilder withShipping(BigDecimal shippingCost, ProductType productType) throws PlenigoException {
+        if (!productType.isShippingAllowed()) {
+            throw new PlenigoException(ErrorCode.SHIPPING_NOT_ALLOWED.getCode(), ErrorCode.SHIPPING_NOT_ALLOWED.getMsg());
+        }
+        this.shippingCost = shippingCost;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation
-                + ", paymentConfirmation=" + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\'' + '}';
+        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation + ", paymentConfirmation="
+                + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\'' + ", failedPayments=" + failedPayments
+                + ", shippingCost=" + shippingCost + '}';
     }
 }
