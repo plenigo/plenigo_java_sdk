@@ -153,8 +153,8 @@ public final class MeterService {
             return true;
         }
         boolean isLoggedIn = UserService.isLoggedIn(cookieHeader);
-        boolean isExpiredData = checkCookieValidity(meteredUserData);
-        return internalMeterService.hasFreeViews(meteredUserData, isLoggedIn, isExpiredData);
+        boolean isCookieValid = checkCookieValidity(meteredUserData);
+        return internalMeterService.hasFreeViews(meteredUserData, isLoggedIn, !isCookieValid);
     }
 
     /**

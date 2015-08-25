@@ -38,25 +38,10 @@ public class MeterServiceTest {
         constructor.newInstance();
     }
 
-
-    @Test
-    public void testSuccessfulGetMeteredViewData() throws Exception {
-        String cookieValue = "browserId|true|2|2|true|etc";
-        String encodedData = EncryptionUtils.get().encryptWithAES(TestUtil.COMPANY_ID, cookieValue, MeterService.METERED_INIT_VECTOR);
-        String cookie = String.format(TestUtil.COOKIE_TPL, CookieParser.PLENIGO_METERED_VIEW_COOKIE_NAME, encodedData);
-        suppressConstructor(PlenigoManager.class);
-        mockStatic(PlenigoManager.class);
-        PlenigoManager mockedMgr = PowerMockito.mock(PlenigoManager.class);
-        PowerMockito.when(PlenigoManager.get()).thenReturn(mockedMgr);
-        PowerMockito.when(mockedMgr.getCompanyId()).thenReturn(TestUtil.COMPANY_ID);
-        PowerMockito.when(mockedMgr.getSecret()).thenReturn(TestUtil.SECRET);
-        assertFalse(MeterService.hasFreeViews(cookie, ""));
-    }
-
     @Test
     public void testSuccessfulGetMeteredViewDataWithCompleteInfo() throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
-        String cookieValue = "browserId|true|2|2|true|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|DAY|false|" + currentTimeMillis + "|etc";
+        String cookieValue = "browserId|true|2|2|false|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|DAY|false|" + currentTimeMillis + "|etc";
         String encodedData = EncryptionUtils.get().encryptWithAES(TestUtil.COMPANY_ID, cookieValue, MeterService.METERED_INIT_VECTOR);
         String cookie = String.format(TestUtil.COOKIE_TPL, CookieParser.PLENIGO_METERED_VIEW_COOKIE_NAME, encodedData);
         suppressConstructor(PlenigoManager.class);
@@ -71,7 +56,7 @@ public class MeterServiceTest {
     @Test
     public void testSuccessfulGetMeteredViewDataWithWeekValidityTime() throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
-        String cookieValue = "browserId|true|2|2|true|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
+        String cookieValue = "browserId|true|2|2|false|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
                 + TimePeriod.WEEK.name() + "|false|" + currentTimeMillis + "|etc";
         String encodedData = EncryptionUtils.get().encryptWithAES(TestUtil.COMPANY_ID, cookieValue, MeterService.METERED_INIT_VECTOR);
         String cookie = String.format(TestUtil.COOKIE_TPL, CookieParser.PLENIGO_METERED_VIEW_COOKIE_NAME, encodedData);
@@ -87,7 +72,7 @@ public class MeterServiceTest {
     @Test
     public void testSuccessfulGetMeteredViewDataWithMonthValidityTime() throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
-        String cookieValue = "browserId|true|2|2|true|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
+        String cookieValue = "browserId|true|2|2|false|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
                 + TimePeriod.MONTH.name() + "|false|" + currentTimeMillis + "|etc";
         String encodedData = EncryptionUtils.get().encryptWithAES(TestUtil.COMPANY_ID, cookieValue, MeterService.METERED_INIT_VECTOR);
         String cookie = String.format(TestUtil.COOKIE_TPL, CookieParser.PLENIGO_METERED_VIEW_COOKIE_NAME, encodedData);
@@ -103,7 +88,7 @@ public class MeterServiceTest {
     @Test
     public void testSuccessfulGetMeteredViewDataWithYearValidityTime() throws Exception {
         long currentTimeMillis = System.currentTimeMillis();
-        String cookieValue = "browserId|true|2|2|true|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
+        String cookieValue = "browserId|true|2|2|false|1,2,3,4,5|6|7|8|9|123|100|" + currentTimeMillis + "|"
                 + TimePeriod.YEAR.name() + "|false|" + currentTimeMillis + "|etc";
         String encodedData = EncryptionUtils.get().encryptWithAES(TestUtil.COMPANY_ID, cookieValue, MeterService.METERED_INIT_VECTOR);
         String cookie = String.format(TestUtil.COOKIE_TPL, CookieParser.PLENIGO_METERED_VIEW_COOKIE_NAME, encodedData);
