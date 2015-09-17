@@ -3,7 +3,7 @@ package com.plenigo.sdk.models;
 
 /**
  * <p>
- * This class is used for requesting an app token for customer app management purposes.
+ * This class is used for requesting the list of applications of a specific customer.
  * </p>
  * <p>
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
