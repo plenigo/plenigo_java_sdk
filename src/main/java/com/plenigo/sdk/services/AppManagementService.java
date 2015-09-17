@@ -187,7 +187,9 @@ public final class AppManagementService {
 
     /**
      * Builds a list of application access data objects.
+     *
      * @param response the response
+     *
      * @return ta list of application access data objects
      */
     private static List<AppAccessData> buildAppAccessList(Map<String, Object> response) {
