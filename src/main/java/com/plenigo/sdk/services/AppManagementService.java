@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -31,8 +30,6 @@ import java.util.logging.Logger;
  * </p>
  */
 public final class AppManagementService {
-    private static final Logger LOGGER = Logger.getLogger(AppManagementService.class.getName());
-
     /**
      * Default constructor.
      */

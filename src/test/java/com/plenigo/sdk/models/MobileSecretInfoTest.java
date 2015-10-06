@@ -8,21 +8,27 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.models.CustomerAppRequest}.
+ * Tests for {@link MobileSecretInfo}.
  * </p>
  */
 public class MobileSecretInfoTest {
-    public static final String CUSTOMER_ID = "customerId";
-    private CustomerAppRequest appAccessData;
+    public static final String EMAIL = "customerId";
+    public static final String MOBILE_APP_SECRET = "mobileAppSecret";
+    private MobileSecretInfo mobileSecretInfo;
 
 
     @Before
     public void setup(){
-        appAccessData = new CustomerAppRequest(CUSTOMER_ID);
+        mobileSecretInfo = new MobileSecretInfo(EMAIL, MOBILE_APP_SECRET);
     }
 
     @Test
-    public void testGetCustomerId(){
-        assertEquals("Customer id is not equal", CUSTOMER_ID, appAccessData.getCustomerId());
+    public void testGetEmail(){
+        assertEquals("email is not equal", EMAIL, mobileSecretInfo.getEmail());
+    }
+
+    @Test
+    public void testGetMobileAppSecret(){
+        assertEquals("mobile app secret is not equal", MOBILE_APP_SECRET, mobileSecretInfo.getMobileAppSecret());
     }
 }
