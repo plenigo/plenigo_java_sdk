@@ -30,11 +30,11 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
 /**
- * Tests for {@link AppManagementService}.
+ * Tests for {@link com.plenigo.sdk.services.AppManagementService}.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({EncryptionUtils.class, PlenigoManager.class, RestClient.class})
-public class AppManagementServiceTest {
+public class MobileServiceTest {
 
     @Before
     public void setup() throws PlenigoException {

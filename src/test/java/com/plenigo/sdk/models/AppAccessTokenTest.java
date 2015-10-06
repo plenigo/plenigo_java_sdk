@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.models.AppAccessToken}.
+ * Tests for {@link AppAccessToken}.
  * </p>
  */
 public class AppAccessTokenTest {

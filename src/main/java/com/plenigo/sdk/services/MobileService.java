@@ -30,13 +30,13 @@ import java.util.logging.Logger;
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
  * </p>
  */
-public final class AppManagementService {
-    private static final Logger LOGGER = Logger.getLogger(AppManagementService.class.getName());
+public final class MobileService {
+    private static final Logger LOGGER = Logger.getLogger(MobileService.class.getName());
 
     /**
      * Default constructor.
      */
-    private AppManagementService() {
+    private MobileService() {
 
     }
 
@@ -47,7 +47,7 @@ public final class AppManagementService {
      *
      * @return application access token
      *
-     * @throws PlenigoException if any error occured
+     * @throws com.plenigo.sdk.PlenigoException if any error occured
      */
     public static AppAccessToken requestAppToken(AppTokenRequest request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
@@ -81,7 +81,7 @@ public final class AppManagementService {
      *
      * @return a list of application accesses
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static List<AppAccessData> getCustomerApps(CustomerAppRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -101,7 +101,7 @@ public final class AppManagementService {
      *
      * @return the app access data
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static AppAccessData requestAppId(AppAccessToken request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
@@ -121,7 +121,7 @@ public final class AppManagementService {
      *
      * @return if the flag is true, then the user bought the product, false otherwise
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static boolean hasUserBought(ProductAccessRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -152,7 +152,7 @@ public final class AppManagementService {
      *
      * @param request request information
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static void deleteCustomerApp(DeleteAppIdRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();

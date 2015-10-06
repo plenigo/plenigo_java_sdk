@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
- * Tests for {@link CustomerAppRequest}.
+ * Tests for {@link com.plenigo.sdk.models.CustomerAppRequest}.
  * </p>
  */
-public class CustomerAppRequestTest {
+public class MobileSecretInfoTest {
     public static final String CUSTOMER_ID = "customerId";
     private CustomerAppRequest appAccessData;
 
