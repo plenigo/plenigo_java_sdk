@@ -31,7 +31,6 @@ import java.util.logging.Logger;
  * </p>
  */
 public final class AppManagementService {
-    private static final Logger LOGGER = Logger.getLogger(AppManagementService.class.getName());
 
     /**
      * Default constructor.
@@ -125,7 +124,7 @@ public final class AppManagementService {
      */
     public static boolean hasUserBought(ProductAccessRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
-        boolean hasAccess = false;
+        boolean hasAccess = true;
         params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
@@ -137,9 +136,6 @@ public final class AppManagementService {
             if (ErrorCode.get(pe.getResponseCode()) == ErrorCode.CANNOT_ACCESS_PRODUCT
                     || pe.getResponseCode().equals(String.valueOf(HttpURLConnection.HTTP_FORBIDDEN))) {
                 hasAccess = false;
-            } else if (ErrorCode.get(pe.getResponseCode()) == ErrorCode.PRODUCT_ACCESS_ALLOWED
-                    || pe.getResponseCode().equals(String.valueOf(HttpURLConnection.HTTP_NO_CONTENT))) {
-                hasAccess = true;
             } else {
                 throw pe;
             }
