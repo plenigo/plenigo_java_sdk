@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.models.CustomerAppRequest}.
+ * Tests for {@link CustomerAppRequest}.
  * </p>
  */
 public class CustomerAppRequestTest {

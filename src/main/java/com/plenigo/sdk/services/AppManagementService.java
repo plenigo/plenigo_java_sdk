@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -31,7 +30,6 @@ import java.util.logging.Logger;
  * </p>
  */
 public final class AppManagementService {
-
     /**
      * Default constructor.
      */
@@ -46,7 +44,7 @@ public final class AppManagementService {
      *
      * @return application access token
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occured
+     * @throws PlenigoException if any error occured
      */
     public static AppAccessToken requestAppToken(AppTokenRequest request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
@@ -80,7 +78,7 @@ public final class AppManagementService {
      *
      * @return a list of application accesses
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
     public static List<AppAccessData> getCustomerApps(CustomerAppRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -100,7 +98,7 @@ public final class AppManagementService {
      *
      * @return the app access data
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
     public static AppAccessData requestAppId(AppAccessToken request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
@@ -120,11 +118,11 @@ public final class AppManagementService {
      *
      * @return if the flag is true, then the user bought the product, false otherwise
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
     public static boolean hasUserBought(ProductAccessRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
-        boolean hasAccess = true;
+        boolean hasAccess = false;
         params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
@@ -136,6 +134,9 @@ public final class AppManagementService {
             if (ErrorCode.get(pe.getResponseCode()) == ErrorCode.CANNOT_ACCESS_PRODUCT
                     || pe.getResponseCode().equals(String.valueOf(HttpURLConnection.HTTP_FORBIDDEN))) {
                 hasAccess = false;
+            } else if (ErrorCode.get(pe.getResponseCode()) == ErrorCode.PRODUCT_ACCESS_ALLOWED
+                    || pe.getResponseCode().equals(String.valueOf(HttpURLConnection.HTTP_NO_CONTENT))) {
+                hasAccess = true;
             } else {
                 throw pe;
             }
@@ -148,7 +149,7 @@ public final class AppManagementService {
      *
      * @param request request information
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
     public static void deleteCustomerApp(DeleteAppIdRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
@@ -183,9 +184,7 @@ public final class AppManagementService {
 
     /**
      * Builds a list of application access data objects.
-     *
      * @param response the response
-     *
      * @return ta list of application access data objects
      */
     private static List<AppAccessData> buildAppAccessList(Map<String, Object> response) {
