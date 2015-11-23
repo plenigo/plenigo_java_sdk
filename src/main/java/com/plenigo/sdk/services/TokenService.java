@@ -6,6 +6,7 @@ import com.plenigo.sdk.internal.ApiParams;
 import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.ApiURLs;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
+import com.plenigo.sdk.internal.util.JWT;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.models.AccessTokenRequest;
@@ -59,10 +60,9 @@ public final class TokenService {
         params.put(ApiParams.OAUTH_ACCESS_CODE, request.getCode());
         params.put(ApiParams.REDIRECT_URI, request.getRedirectUri());
         params.put(ApiParams.CLIENT_ID, PlenigoManager.get().getCompanyId());
-        params.put(ApiParams.CLIENT_SECRET, PlenigoManager.get().getSecret());
         SdkUtils.addIfNotNull(params, ApiParams.STATE, request.getCsrfToken());
         Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.GET_ACCESS_TOKEN,
-                SdkUtils.buildUrlQueryString(params));
+                SdkUtils.buildUrlQueryString(params), null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return validateAndBuildResponse(request.getCsrfToken(), result);
     }
 
@@ -82,9 +82,9 @@ public final class TokenService {
         params.put(ApiParams.TOKEN_GRANT_TYPE, TokenGrantType.REFRESH_TOKEN.getName());
         params.put(ApiParams.REFRESH_TOKEN, request.getRefreshToken());
         params.put(ApiParams.CLIENT_ID, PlenigoManager.get().getCompanyId());
-        params.put(ApiParams.CLIENT_SECRET, PlenigoManager.get().getSecret());
         SdkUtils.addIfNotNull(params, ApiParams.STATE, request.getCsrfToken());
-        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, SdkUtils.buildUrlQueryString(params));
+        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, SdkUtils.buildUrlQueryString(params)
+                , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
 
         result.put(ApiResults.REFRESH_TOKEN, request.getRefreshToken());
         return validateAndBuildResponse(request.getCsrfToken(), result);

@@ -57,7 +57,7 @@ public class MobileServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         MobileSecretInfo mobileSecretInfo = MobileService.createMobileSecret("customerId", 6);
@@ -70,7 +70,7 @@ public class MobileServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         MobileSecretInfo mobileSecretInfo = MobileService.getMobileSecret("customerId");
@@ -82,7 +82,7 @@ public class MobileServiceTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(ApiResults.CUST_ID, "customerId");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         String customerId = MobileService.verifyMobileSecret("email", "mobileSecret");
@@ -93,7 +93,7 @@ public class MobileServiceTest {
     public void testSuccessfulDeleteMobileSecret() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         boolean customerId = MobileService.deleteMobileSecret("customerId");

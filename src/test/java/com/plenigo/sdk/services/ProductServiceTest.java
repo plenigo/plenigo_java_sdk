@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
@@ -62,7 +63,7 @@ public class ProductServiceTest {
         mockPlenigoManager();
         RestClient client = Mockito.mock(RestClient.class);
         Map<String, Object> map = getSampleProductMap();
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -158,7 +159,7 @@ public class ProductServiceTest {
         map.put(ApiResults.ACTION_PERIOD_NAME, null);
         map.put(ApiResults.ACTION_PERIOD_TERM, null);
         map.put(ApiResults.ACTION_PERIOD_PRICE, null);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -172,8 +173,8 @@ public class ProductServiceTest {
         HttpURLConnection connection = Mockito
                 .mock(HttpURLConnection.class);
         Mockito.when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_REQUEST);
-        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class))
-                .withArguments(anyString(), anyString(), anyString()).thenReturn(connection);
+        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class, Map.class))
+                .withArguments(anyString(), anyString(), anyString(), anyMap()).thenReturn(connection);
         String invalidParamsJson = "{\"userId\":{\"Error\":\"cannot be null\",\"Rejected Value\":\"null\"}}";
         Mockito.when(connection.getErrorStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));
         try {
@@ -212,7 +213,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -243,7 +244,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -274,7 +275,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -305,7 +306,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -326,7 +327,7 @@ public class ProductServiceTest {
         map.put(ApiResults.VALIDITY_TIME, ValidityTime.DAY.getValue());
 
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
