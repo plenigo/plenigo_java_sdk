@@ -49,7 +49,6 @@ public final class AppManagementService {
      */
     public static AppAccessToken requestAppToken(AppTokenRequest request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         body.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         body.put(ApiParams.PRODUCT_ID, request.getProductId());
         body.put(ApiParams.DESCRIPTION, request.getDescription());
@@ -83,7 +82,6 @@ public final class AppManagementService {
     public static List<AppAccessData> getCustomerApps(CustomerAppRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         params.put(ApiParams.CUSTOMER_ID, request.getCustomerId());
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), String.format(ApiURLs.ACCESS_APP_CUSTOMER
                 , request.getCustomerId()), SdkUtils.buildUrlQueryString(params)
@@ -102,7 +100,6 @@ public final class AppManagementService {
      */
     public static AppAccessData requestAppId(AppAccessToken request) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         body.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         body.put(ApiParams.APP_ACCESS_TOKEN, request.getToken());
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), String.format(ApiURLs.ACCESS_APP_CUSTOMER
@@ -122,7 +119,6 @@ public final class AppManagementService {
     public static boolean hasUserBought(ProductAccessRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         boolean hasAccess = true;
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         try {
             HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), String.format(ApiURLs.VERIFY_CUSTOMER_APP_PRODUCT
@@ -149,7 +145,6 @@ public final class AppManagementService {
      */
     public static void deleteCustomerApp(DeleteAppIdRequest request) throws PlenigoException {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         try {
             HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), String.format(ApiURLs.DELETE_CUSTOMER_APP
