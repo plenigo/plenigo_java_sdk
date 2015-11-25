@@ -87,7 +87,6 @@ public final class MobileService {
             mobileSecretSize = MAX_MOBILE_SECRET_SIZE;
         }
         Map<String, String> body = new LinkedHashMap<String, String>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         body.put(ApiParams.MOBILE_SECRET_SIZE, String.valueOf(mobileSecretSize));
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
                 , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
@@ -117,10 +116,8 @@ public final class MobileService {
      * @throws PlenigoException if any error occurs
      */
     public static boolean deleteMobileSecret(String customerId) throws PlenigoException {
-        Map<String, Object> body = new LinkedHashMap<String, Object>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
-                , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return true;
     }
 }
