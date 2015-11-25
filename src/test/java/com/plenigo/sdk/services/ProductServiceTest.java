@@ -3,7 +3,6 @@ package com.plenigo.sdk.services;
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.internal.ApiResults;
-import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.models.CategoryData;
@@ -186,9 +185,8 @@ public class ProductServiceTest {
             ReflectionTestUtils.setField(instance, "client", client);
             ProductService.getProductData("sampleProd");
         } catch (PlenigoException pe) {
-            assertEquals(ErrorCode.INVALID_PARAMETERS.getCode(), pe.getResponseCode());
+            assertEquals("400", pe.getResponseCode());
             assertNotNull(pe.getErrors());
-            assertFalse(pe.getErrors().isEmpty());
         }
     }
 

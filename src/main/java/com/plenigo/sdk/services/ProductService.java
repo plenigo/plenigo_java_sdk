@@ -69,8 +69,7 @@ public final class ProductService {
                 , new Object[]{productId, PlenigoManager.get().getCompanyId()});
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT, "/"
-                + productId + "?" + SdkUtils.buildUrlQueryString(params)
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT + "/" + productId, null
                 , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from product id {0} : {1}", new Object[]{productId, response});
         ProductData productData = buildProductData(response);
@@ -90,7 +89,6 @@ public final class ProductService {
      */
     public static PagedList<ProductInfo> getProductList(int pageSize, String lastId) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.PAGE_SIZE, pageSize);
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
@@ -113,13 +111,12 @@ public final class ProductService {
      */
     public static PagedList<CategoryInfo> getCategoryList(int pageSize, String lastId) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.PAGE_SIZE, pageSize);
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
         }
         Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, SdkUtils.buildUrlQueryString(params)
-        , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
 
         return buildCategoryList(objectMap);
     }
