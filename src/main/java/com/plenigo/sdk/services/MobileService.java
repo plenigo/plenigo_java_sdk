@@ -44,7 +44,6 @@ public final class MobileService {
      */
     public static String verifyMobileSecret(String email, String mobileSecret) throws PlenigoException {
         Map<String, Object> body = new LinkedHashMap<String, Object>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         body.put(ApiParams.EMAIL, email);
         body.put(ApiParams.MOBILE_SECRET, mobileSecret);
         Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_VERIFY
@@ -63,7 +62,6 @@ public final class MobileService {
      */
     public static MobileSecretInfo getMobileSecret(String customerId) throws PlenigoException {
         Map<String, Object> body = new LinkedHashMap<String, Object>();
-        body.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
                 , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildMobileSecretInfo(response);
