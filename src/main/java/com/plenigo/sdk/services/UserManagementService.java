@@ -21,14 +21,14 @@ import java.util.Map;
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
  * </p>
  */
-public final class MobileService {
+public final class UserManagementService {
     public static final int MIN_MOBILE_SECRET_SIZE = 6;
     public static final int MAX_MOBILE_SECRET_SIZE = 40;
 
     /**
      * Default constructor.
      */
-    private MobileService() {
+    private UserManagementService() {
 
     }
 
@@ -40,7 +40,7 @@ public final class MobileService {
      *
      * @return the mobile secret
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static String verifyMobileSecret(String email, String mobileSecret) throws PlenigoException {
         Map<String, Object> body = new LinkedHashMap<String, Object>();
@@ -58,7 +58,7 @@ public final class MobileService {
      *
      * @return the mobile secret info
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static MobileSecretInfo getMobileSecret(String customerId) throws PlenigoException {
         Map<String, Object> body = new LinkedHashMap<String, Object>();
@@ -75,7 +75,7 @@ public final class MobileService {
      *
      * @return the mobile secret info
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static MobileSecretInfo createMobileSecret(String customerId, int mobileSecretSize) throws PlenigoException {
         if (mobileSecretSize < MIN_MOBILE_SECRET_SIZE) {
@@ -111,7 +111,7 @@ public final class MobileService {
      *
      * @return true if it the request was successful, false otherwise
      *
-     * @throws PlenigoException if any error occurs
+     * @throws com.plenigo.sdk.PlenigoException if any error occurs
      */
     public static boolean deleteMobileSecret(String customerId) throws PlenigoException {
         HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)

@@ -6,6 +6,7 @@ import com.plenigo.sdk.internal.ApiParams;
 import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.ApiURLs;
 import com.plenigo.sdk.internal.models.PagingInfo;
+import com.plenigo.sdk.internal.util.JWT;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.models.ActionPeriod;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * <p>
  * This contains the services required  for Product management with plenigo.
@@ -38,12 +38,10 @@ import java.util.logging.Logger;
 public final class ProductService {
     private static final Logger LOGGER = Logger.getLogger(ProductService.class.getName());
 
-
     /**
      * Rest client used internally.
      */
     private static RestClient client = new RestClient();
-
 
     /**
      * Default constructor.
@@ -51,7 +49,6 @@ public final class ProductService {
     private ProductService() {
 
     }
-
 
     /**
      * This method retrieves the product data of a provided product id.
@@ -66,11 +63,8 @@ public final class ProductService {
     public static ProductData getProductData(String productId) throws PlenigoException {
         LOGGER.log(Level.FINEST, "Getting the product data for the product id: {0} using the following company id: {1}"
                 , new Object[]{productId, PlenigoManager.get().getCompanyId()});
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
-        params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT, "/"
-                + productId + "?" + SdkUtils.buildUrlQueryString(params));
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT + "/" + productId, null
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from product id {0} : {1}", new Object[]{productId, response});
         ProductData productData = buildProductData(response);
         LOGGER.log(Level.FINEST, "Built Product Data from product id {0} : {1}", new Object[]{productId, productData});
@@ -89,16 +83,14 @@ public final class ProductService {
      */
     public static PagedList<ProductInfo> getProductList(int pageSize, String lastId) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.PAGE_SIZE, pageSize);
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
         }
-        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_PRODUCTS, SdkUtils.buildUrlQueryString(params));
+        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_PRODUCTS, SdkUtils.buildUrlQueryString(params)
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildProductList(objectMap);
     }
-
 
     /**
      * Obtain a list of product in a paginated way.
@@ -112,17 +104,15 @@ public final class ProductService {
      */
     public static PagedList<CategoryInfo> getCategoryList(int pageSize, String lastId) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
         params.put(ApiParams.PAGE_SIZE, pageSize);
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
         }
-        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, SdkUtils.buildUrlQueryString(params));
+        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, SdkUtils.buildUrlQueryString(params)
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
 
         return buildCategoryList(objectMap);
     }
-
 
     /**
      * Retrieves the  product list data values provided in the map,.
@@ -131,7 +121,6 @@ public final class ProductService {
      *
      * @return A {@link PagedList} object built from the map
      */
-
     @SuppressWarnings("unchecked")
     private static PagedList<CategoryInfo> buildCategoryList(Map<String, Object> response) {
         PagingInfo pagingInfo = buildPagingInfo(response, ApiResults.CATEGORY_ID);
@@ -152,7 +141,6 @@ public final class ProductService {
         }
         return new PagedList<CategoryInfo>(categories, pagingInfo);
     }
-
 
     /**
      * Retrieves the  product list data values provided in the map,.
@@ -260,7 +248,6 @@ public final class ProductService {
         return imageData;
     }
 
-
     /**
      * Retrieves the action period values provided in the map.
      *
@@ -282,7 +269,6 @@ public final class ProductService {
         }
         return new ActionPeriod(actionPeriodName, actionPeriodTerm, actionPeriodPrice);
     }
-
 
     /**
      * Retrieves the pricing data values provided in the map.
@@ -311,7 +297,6 @@ public final class ProductService {
 
         return new PricingData(choosePrice, price, taxes, currency);
     }
-
 
     /**
      * Retrieves the subscription data values provided in the map.
@@ -346,7 +331,6 @@ public final class ProductService {
         return new Subscription(subscription, term, cancellationPeriod, autoRenewal);
     }
 
-
     /**
      * Retrieves the pricing data values provided in the map.
      *
@@ -377,11 +361,8 @@ public final class ProductService {
     public static CategoryData getCategoryData(String categoryId) throws PlenigoException {
         LOGGER.log(Level.FINEST, "Getting the category data for the category id: {0} using the following company id: {1}"
                 , new Object[]{categoryId, PlenigoManager.get().getCompanyId()});
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(ApiParams.COMPANY_ID, PlenigoManager.get().getCompanyId());
-        params.put(ApiParams.SECRET, PlenigoManager.get().getSecret());
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_CATEGORY, "/"
-                + categoryId + "?" + SdkUtils.buildUrlQueryString(params));
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_CATEGORY + "/" + categoryId, null
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from category {0} : {1}", new Object[]{categoryId, response});
         CategoryData categoryData = buildCategoryData(response);
         LOGGER.log(Level.FINEST, "Built Category Data from category id {0} : {1}", new Object[]{categoryId, categoryData});
