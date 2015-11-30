@@ -8,22 +8,20 @@ import com.plenigo.sdk.internal.ApiURLs;
 import com.plenigo.sdk.internal.util.HttpConfig;
 import com.plenigo.sdk.internal.util.JWT;
 import com.plenigo.sdk.internal.util.SdkUtils;
-import com.plenigo.sdk.models.MobileSecretInfo;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * <p>
- * This contains the services related to mobile secret handling with plenigo,
+ * This contains the services related touser management handling with plenigo,
  * </p>
  * <p>
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
  * </p>
  */
 public final class UserManagementService {
-    public static final int MIN_MOBILE_SECRET_SIZE = 6;
-    public static final int MAX_MOBILE_SECRET_SIZE = 40;
+
 
     /**
      * Default constructor.
@@ -33,89 +31,59 @@ public final class UserManagementService {
     }
 
     /**
-     * Returns the customer id given the mobile secret.
+     * Registers a new user bound to the company that registers the user. This functionality is only available for companies with closed user groups.
      *
-     * @param email        the email address
-     * @param mobileSecret the mobile secret
+     * @param email    email address of the user to register
+     * @param language Language of the user as two digit ISO code(e.g. en), if left null, en(english) will be used.
      *
-     * @return the mobile secret
+     * @return customer id
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
-    public static String verifyMobileSecret(String email, String mobileSecret) throws PlenigoException {
-        Map<String, Object> body = new LinkedHashMap<String, Object>();
+    public static String registerUser(String email, String language) throws PlenigoException {
+        Map<String, String> body = new LinkedHashMap<String, String>();
         body.put(ApiParams.EMAIL, email);
-        body.put(ApiParams.MOBILE_SECRET, mobileSecret);
-        Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_VERIFY
-                , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        if (language == null) {
+            language = "en";
+        }
+        body.put(ApiParams.LANGUAGE, language);
+        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.REGISTER_EXTERNAL_USER_URL
+                , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return SdkUtils.getValueIfNotNull(response, ApiResults.CUST_ID);
     }
 
     /**
-     * Returns the mobile secret.
+     * Change email address of an existing user. This functionality is only available for companies with closed user groups.
      *
-     * @param customerId customer id
+     * @param customerId customer id of the user to change email address for
+     * @param email      new email address of user
      *
-     * @return the mobile secret info
+     * @return TRUE if the email address has changed
      *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
+     * @throws PlenigoException if any error occurs
      */
-    public static MobileSecretInfo getMobileSecret(String customerId) throws PlenigoException {
-        Map<String, Object> body = new LinkedHashMap<String, Object>();
-        Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
-                , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-        return buildMobileSecretInfo(response);
-    }
-
-    /**
-     * Creates a mobile secret for a specific customer.
-     *
-     * @param customerId       customer id
-     * @param mobileSecretSize mobile secret size
-     *
-     * @return the mobile secret info
-     *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
-     */
-    public static MobileSecretInfo createMobileSecret(String customerId, int mobileSecretSize) throws PlenigoException {
-        if (mobileSecretSize < MIN_MOBILE_SECRET_SIZE) {
-            mobileSecretSize = MIN_MOBILE_SECRET_SIZE;
-        }
-        if (mobileSecretSize > MAX_MOBILE_SECRET_SIZE) {
-            mobileSecretSize = MAX_MOBILE_SECRET_SIZE;
-        }
+    public static boolean changeEmail(String customerId, String email) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
-        body.put(ApiParams.MOBILE_SECRET_SIZE, String.valueOf(mobileSecretSize));
-        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
+        body.put(ApiParams.EMAIL, email);
+        HttpConfig.get().getClient().put(PlenigoManager.get().getUrl()
+                , String.format(ApiURLs.EXTERNAL_USER_EMAIL_CHANGE_URL, customerId)
                 , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-        return buildMobileSecretInfo(response);
-    }
-
-    /**
-     * Builds the mobile secret info object.
-     *
-     * @param response the json response as a map
-     *
-     * @return mobile secret info object
-     */
-    private static MobileSecretInfo buildMobileSecretInfo(Map<String, Object> response) {
-        String customerId = SdkUtils.getValueIfNotNull(response, ApiResults.EMAIL);
-        String mobileAppSecret = SdkUtils.getValueIfNotNull(response, ApiResults.MOBILE_APP_SECRET);
-        return new MobileSecretInfo(customerId, mobileAppSecret);
-    }
-
-    /**
-     * Deletes a mobile secret.
-     *
-     * @param customerId customer id
-     *
-     * @return true if it the request was successful, false otherwise
-     *
-     * @throws com.plenigo.sdk.PlenigoException if any error occurs
-     */
-    public static boolean deleteMobileSecret(String customerId) throws PlenigoException {
-        HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
-                , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return true;
+    }
+
+    /**
+     * Create a login token for an existing user. This functionality is only available for companies with closed user groups.
+     *
+     * @param customerId the customer id
+     *
+     * @return login token
+     *
+     * @throws PlenigoException if any error occurs
+     */
+    public static String createLoginToken(String customerId) throws PlenigoException {
+        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl()
+                , String.format(ApiURLs.EXTERNAL_USER_CREATE_LOGIN_TOKEN_URL, customerId)
+                , null, null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        return SdkUtils.getValueIfNotNull(response, ApiResults.LOGIN_TOKEN);
     }
 }

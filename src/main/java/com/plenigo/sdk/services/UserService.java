@@ -151,7 +151,7 @@ public final class UserService {
      *
      * @throws com.plenigo.sdk.PlenigoException whenever an error happens
      */
-    private static Customer getCustomerInfo(String cookieHeader) throws PlenigoException {
+    public static Customer getCustomerInfo(String cookieHeader) throws PlenigoException {
         HttpCookie customerCookie = CookieParser.getCustomerCookie(cookieHeader);
         return getCustomerInfo(customerCookie);
     }
