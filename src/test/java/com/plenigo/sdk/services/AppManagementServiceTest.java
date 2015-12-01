@@ -10,6 +10,8 @@ import com.plenigo.sdk.models.AppAccessData;
 import com.plenigo.sdk.models.AppAccessToken;
 import com.plenigo.sdk.models.AppTokenRequest;
 import com.plenigo.sdk.models.CustomerAppRequest;
+import com.plenigo.sdk.models.DeleteAppIdRequest;
+import com.plenigo.sdk.models.ProductAccessRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,5 +103,27 @@ public class AppManagementServiceTest {
                 .thenReturn(apiDataMap);
         AppAccessData appAccessData = AppManagementService.requestAppId(appAccessToken);
         assertNotNull(appAccessData);
+    }
+
+
+    @Test
+    public void testSuccessfulDelete() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        RestClient client = Mockito.mock(RestClient.class);
+        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+                .thenReturn(map);
+        HttpConfig.get().setClient(client);
+        AppManagementService.deleteCustomerApp(new DeleteAppIdRequest("customerId", "customerAppid"));
+    }
+
+    @Test
+    public void testSuccessfulHasUserBought() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        RestClient client = Mockito.mock(RestClient.class);
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+                .thenReturn(map);
+        HttpConfig.get().setClient(client);
+        Boolean hasUserBought = AppManagementService.hasUserBought(new ProductAccessRequest("customerId", "productId", "customerAppId"));
+        assertTrue(hasUserBought);
     }
 }
