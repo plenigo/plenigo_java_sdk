@@ -37,6 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -95,7 +96,7 @@ public class UserServiceTest {
 
 
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), eq(ApiURLs.PAYWALL_STATE), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), eq(ApiURLs.PAYWALL_STATE), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(Collections.singletonMap("enabled", (Object) "true"));
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -155,7 +156,7 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(instance, "client", client);
         Map<String, Object> result = new HashMap<String, Object>();
         result.put(ApiResults.PAYWALL_STATE, Boolean.TRUE.toString());
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(result);
         assertTrue(UserService.isPaywallEnabled());
     }
@@ -177,8 +178,8 @@ public class UserServiceTest {
         HttpURLConnection connection = Mockito
                 .mock(HttpURLConnection.class);
         Mockito.when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
-        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class))
-                .withArguments(anyString(), anyString(), anyString()).thenReturn(connection);
+        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class, Map.class))
+                .withArguments(anyString(), anyString(), anyString(), anyMap()).thenReturn(connection);
         String invalidParamsJson = "{\"subscriptions\":[{\"productId\":\"bbftsqC3787224694141\",\"title\":\"Test Subscription\"," +
                 "\"buyDate\":\"2014-12-10 14:08:07 +0100\",\"endDate\":\"2014-12-10 14:08:07 +0100\"}]}";
         Mockito.when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));
@@ -211,8 +212,8 @@ public class UserServiceTest {
         HttpURLConnection connection = Mockito
                 .mock(HttpURLConnection.class);
         Mockito.when(connection.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
-        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class))
-                .withArguments(anyString(), anyString(), anyString()).thenReturn(connection);
+        PowerMockito.when(client, method(RestClient.class, "getHttpConnection", String.class, String.class, String.class, Map.class))
+                .withArguments(anyString(), anyString(), anyString(), anyMap()).thenReturn(connection);
         String invalidParamsJson = "{\"singleProducts\":[{\"productId\":\"bbftsqC3787224694141\",\"title\":\"Test Subscription\"," +
                 "\"buyDate\":\"2014-12-10 14:08:07 +0100\",\"endDate\":\"2014-12-10 14:08:07 +0100\"}]}";
         Mockito.when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));

@@ -50,7 +50,7 @@ public class TokenServiceTest {
         map.put(ApiResults.STATE, "12345");
         map.put(ApiResults.ACCESS_TOKEN, "1");
         map.put(ApiResults.EXPIRES_IN, 3600L);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         TokenService instance = Whitebox.invokeConstructor(TokenService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -71,7 +71,7 @@ public class TokenServiceTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(ApiResults.ERROR, "1233");
         map.put(ApiResults.ERROR_DESCRIPTION, "ERROR MSG");
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
 
         TokenService instance = Whitebox.invokeConstructor(TokenService.class);
@@ -91,7 +91,7 @@ public class TokenServiceTest {
         map.put(ApiResults.STATE, "123456");
         map.put(ApiResults.ACCESS_TOKEN, "1");
         map.put(ApiResults.EXPIRES_IN, 3600L);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         TokenService instance = Whitebox.invokeConstructor(TokenService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -114,7 +114,7 @@ public class TokenServiceTest {
         map.put(ApiResults.STATE, "12345");
         map.put(ApiResults.ACCESS_TOKEN, "1");
         map.put(ApiResults.EXPIRES_IN, 3600L);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         TokenService instance = Whitebox.invokeConstructor(TokenService.class);
         ReflectionTestUtils.setField(instance, "client", client);

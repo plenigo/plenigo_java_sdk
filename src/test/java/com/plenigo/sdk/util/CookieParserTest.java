@@ -28,11 +28,6 @@ public class CookieParserTest {
         constructor.newInstance();
     }
 
-
-    /**
-     * This method tests an {@link com.plenigo.sdk.internal.util.CookieParser#getCustomerCookie(String)}
-     * call with a null argument
-     */
     @Test
     public void testGetCustomerCookieWithEmptyValues() {
         HttpCookie customerCookie = CookieParser.getCustomerCookie(null);
@@ -52,7 +47,6 @@ public class CookieParserTest {
         assertEquals(expectedCookieValue, cookieValue);
     }
 
-
     @Test
     public void testReturnNullWhenCookieNotFound() {
         String bigCookieHeader = "Cookies =>JSESSIONID=D7E0A06D30AC326AFD32841DF975226A; " +
@@ -60,7 +54,6 @@ public class CookieParserTest {
         String cookieValue = CookieParser.extractCookieValue(CookieParser.PLENIGO_USER_COOKIE_NAME, bigCookieHeader);
         assertNull(cookieValue);
     }
-
 
     @Test
     public void testReturnNullWhenCookieIsNull() {
