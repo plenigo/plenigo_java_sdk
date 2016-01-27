@@ -20,13 +20,13 @@ public class ProductDataTest {
         PricingData pricingData = new PricingData(true, 10.00, 34, "USD");
         ActionPeriod actionPeriod = new ActionPeriod("name", 4, 12.00);
         List<Image> images = Collections.singletonList(new Image("url", "desc", "alt"));
-        ProductData data = new ProductData("id", subscription, "title", "desc", false, pricingData, actionPeriod, images, 1, 1);
+        ProductData data = new ProductData("id", subscription, "title", "desc", false, pricingData, actionPeriod, images, 1, "custom text");
         assertNotNull(data.toString());
     }
 
     @Test
     public void testToStringWithNullObjects() {
-        ProductData data = new ProductData("id", null, "title", "desc", false, null, null, null, 1, 1);
+        ProductData data = new ProductData("id", null, "title", "desc", false, null, null, null, 1, "custom text");
         assertNotNull(data.toString());
     }
 }

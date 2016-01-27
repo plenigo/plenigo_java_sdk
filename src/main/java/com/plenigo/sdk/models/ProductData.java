@@ -22,7 +22,7 @@ public class ProductData implements Serializable {
     private List<Image> images;
     private boolean collectible;
     private int maxParallelAccess;
-    private int customInfo;
+    private String customInfo;
 
     /**
      * Product Data constructor, must be filled with the required data.
@@ -39,7 +39,7 @@ public class ProductData implements Serializable {
      * @param customInfo        The custom information
      */
     public ProductData(String id, Subscription subscription, String title, String description, Boolean collectible, PricingData pricingData,
-                       ActionPeriod actionPeriod, List<Image> images, int maxParallelAccess, int customInfo) {
+                       ActionPeriod actionPeriod, List<Image> images, int maxParallelAccess, String customInfo) {
         this.id = id;
         if (subscription == null) {
             subscription = new Subscription(false, 0, 0, false);
@@ -229,7 +229,7 @@ public class ProductData implements Serializable {
      *
      * @return custom info
      */
-    public int getCustomInfo() {
+    public String getCustomInfo() {
         return customInfo;
     }
 }

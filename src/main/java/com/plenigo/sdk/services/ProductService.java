@@ -227,11 +227,7 @@ public final class ProductService {
             maxParallelAccess = Integer.parseInt(maxParallelAccessStr);
         }
 
-        String customInfoStr = SdkUtils.getValueIfNotNull(response, ApiResults.CUSTOM_INFO);
-        int customInfo = 0;
-        if (!customInfoStr.isEmpty()) {
-            customInfo = Integer.parseInt(customInfoStr);
-        }
+        String customInfo = SdkUtils.getValueIfNotNull(response, ApiResults.CUSTOM_INFO);
         return new ProductData(id, subscriptionData, title, description, collectible, pricingData, actionPeriod, imageData, maxParallelAccess, customInfo);
     }
 
