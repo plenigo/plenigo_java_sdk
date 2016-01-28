@@ -2,11 +2,11 @@ package com.plenigo.sdk.builders;
 
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
-import com.plenigo.sdk.internal.ErrorCode;
-import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.internal.ApiParams;
-import com.plenigo.sdk.internal.util.SdkUtils;
+import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
+import com.plenigo.sdk.internal.util.SdkUtils;
+import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.models.ProductType;
 
 import java.math.BigDecimal;
@@ -67,12 +67,16 @@ public class CheckoutSnippetBuilder {
      * Shipping costs related to the product checkout.
      */
     private BigDecimal shippingCost;
-
+    /**
+     * Enables override mode.
+     */
+    private Boolean overrideMode;
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
      */
     private static final String CHECKOUT_SNIPPET_TPL = "plenigo.checkout('%s');";
+
 
     /**
      * This constructor takes a {@link Product} object as a parameter.
@@ -156,6 +160,7 @@ public class CheckoutSnippetBuilder {
             SdkUtils.addIfNotNull(map, ApiParams.CATEGORY_ID, product.getCategoryId());
             SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
             SdkUtils.addIfNotNull(map, ApiParams.SHIPPING_COST, shippingCost);
+            SdkUtils.addIfNotNull(map, ApiParams.OVERRIDE_MODE, overrideMode);
             if (csrfToken != null) {
                 LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
                 map.put(ApiParams.CSRF_TOKEN, csrfToken);
@@ -247,6 +252,22 @@ public class CheckoutSnippetBuilder {
             throw new PlenigoException(ErrorCode.SHIPPING_NOT_ALLOWED.getCode(), ErrorCode.SHIPPING_NOT_ALLOWED.getMsg());
         }
         this.shippingCost = shippingCost;
+        return this;
+    }
+
+    /**
+     * Enables override mode.
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException if a validation error happens
+     */
+    public CheckoutSnippetBuilder withOverrideMode() throws PlenigoException {
+        this.overrideMode = true;
+        if (product.getPrice() == null) {
+            ErrorCode errorCode = ErrorCode.OVERRIDE_MODE_REQUIRES_PRICE;
+            throw new PlenigoException(errorCode.getCode(), errorCode.getMsg());
+        }
         return this;
     }
 

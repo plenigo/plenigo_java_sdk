@@ -260,6 +260,28 @@ public class CheckoutSnippetBuilderTest {
                 + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
     }
 
+    @Test
+    public final void testOverrideMode() throws PlenigoException {
+        Product product = getProduct();
+        product.setPrice(15.00);
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product)
+                .withCSRFToken("TOKEN").withOverrideMode();
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
+    }
+
+    @Test(expected = PlenigoException.class)
+    public final void testOverrideModeWithoutPrice() throws PlenigoException {
+        Product product = new Product("id");
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product).withOverrideMode();
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
+    }
+
     /**
      * Test toString method
      */
