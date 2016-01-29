@@ -42,6 +42,9 @@ public class CheckoutSnippetBuilderTest {
     private static final String PLENIGO_CHECKOUT_BASE_REGEX =
             "^plenigo\\.checkout\\('[\\w]+'\\);$";
 
+    private static final String PLENIGO_CHECKOUT_LOGIN_TOKEN_REGEX =
+            "^plenigo\\.checkoutWithRemoteLogin\\('[\\w]+','[\\w]+'\\);$";
+
 
     /**
      * Returns a mocked builder since the Encryption is not necessary for these unit tests.
@@ -293,6 +296,29 @@ public class CheckoutSnippetBuilderTest {
         assertNotNull(linkBuilder.toString());
     }
 
+    @Test
+    public final void testLoginToken() throws PlenigoException {
+        Product product = getProduct();
+        product.setPrice(15.00);
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product)
+                .withLoginToken("loginToken");
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_LOGIN_TOKEN_REGEX));
+    }
+
+    @Test
+    public final void testLoginTokenWithEmptyToken() throws PlenigoException {
+        Product product = getProduct();
+        product.setPrice(15.00);
+        CheckoutSnippetBuilder linkBuilder = getBuilder(product)
+                .withLoginToken("");
+        String builtLink = linkBuilder.build();
+        assertNotNull(builtLink, "The generated link is null");
+        assertTrue("The link does not match the expected regex -> "
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_BASE_REGEX));
+    }
 
     /**
      * Tests the default constructor

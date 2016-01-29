@@ -71,11 +71,20 @@ public class CheckoutSnippetBuilder {
      * Enables override mode.
      */
     private Boolean overrideMode;
+
+    /**
+     * Login token.
+     */
+    private String loginToken;
+
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
      */
-    private static final String CHECKOUT_SNIPPET_TPL = "plenigo.checkout('%s');";
+    private static final String CHECKOUT_SNIPPET_TPL = "plenigo.checkout(%s);";
+    private static final String CHECKOUT_LOGIN_SNIPPET_TPL = "plenigo.checkoutWithRemoteLogin(%s);";
+    private static final String CHECKOUT_PARAMETER_TPL = "'%s'";
+    private static final String CHECKOUT_PARAMETER_SEPARATOR = ",";
 
 
     /**
@@ -104,9 +113,16 @@ public class CheckoutSnippetBuilder {
      * @throws com.plenigo.sdk.PlenigoException whenever an error happens
      */
     public String build() throws PlenigoException {
+        String snippetTpl = CHECKOUT_SNIPPET_TPL;
         String encodedData = buildEncodedData();
+        String parameters = String.format(CHECKOUT_PARAMETER_TPL, encodedData);
+        if (loginToken != null && !loginToken.isEmpty()) {
+            String loginParameter = String.format(CHECKOUT_PARAMETER_TPL, loginToken);
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + loginParameter;
+            snippetTpl = CHECKOUT_LOGIN_SNIPPET_TPL;
+        }
         String snippet = String
-                .format(CHECKOUT_SNIPPET_TPL, encodedData);
+                .format(snippetTpl, parameters);
         LOGGER.log(Level.FINEST, "Built checkout snippet: {0}.", snippet);
         return snippet;
     }
@@ -268,6 +284,18 @@ public class CheckoutSnippetBuilder {
             ErrorCode errorCode = ErrorCode.OVERRIDE_MODE_REQUIRES_PRICE;
             throw new PlenigoException(errorCode.getCode(), errorCode.getMsg());
         }
+        return this;
+    }
+
+    /**
+     * Creates a checkout snippet with a login token.
+     *
+     * @param loginToken Login token
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     */
+    public CheckoutSnippetBuilder withLoginToken(String loginToken) {
+        this.loginToken = loginToken;
         return this;
     }
 
