@@ -47,7 +47,8 @@ public final class MobileService {
         body.put(ApiParams.EMAIL, email);
         body.put(ApiParams.MOBILE_SECRET, mobileSecret);
         Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_VERIFY
-                , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                , ApiURLs.MOBILE_SECRET_VERIFY , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
+                , PlenigoManager.get().getSecret()));
         return SdkUtils.getValueIfNotNull(response, ApiResults.CUST_ID);
     }
 
@@ -62,8 +63,9 @@ public final class MobileService {
      */
     public static MobileSecretInfo getMobileSecret(String customerId) throws PlenigoException {
         Map<String, Object> body = new LinkedHashMap<String, Object>();
-        Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
-                , SdkUtils.buildUrlQueryString(body), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_URL
+                , String.format(ApiURLs.MOBILE_SECRET_URL, customerId) , SdkUtils.buildUrlQueryString(body)
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildMobileSecretInfo(response);
     }
 
@@ -86,8 +88,9 @@ public final class MobileService {
         }
         Map<String, String> body = new LinkedHashMap<String, String>();
         body.put(ApiParams.MOBILE_SECRET_SIZE, String.valueOf(mobileSecretSize));
-        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
-                , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_URL
+                , String.format(ApiURLs.MOBILE_SECRET_URL, customerId) , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
+                , PlenigoManager.get().getSecret()));
         return buildMobileSecretInfo(response);
     }
 
@@ -114,7 +117,7 @@ public final class MobileService {
      * @throws PlenigoException if any error occurs
      */
     public static boolean deleteMobileSecret(String customerId) throws PlenigoException {
-        HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
+        HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), ApiURLs.MOBILE_SECRET_URL, String.format(ApiURLs.MOBILE_SECRET_URL, customerId)
                 , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return true;
     }

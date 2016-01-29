@@ -61,7 +61,7 @@ public final class TokenService {
         params.put(ApiParams.REDIRECT_URI, request.getRedirectUri());
         params.put(ApiParams.CLIENT_ID, PlenigoManager.get().getCompanyId());
         SdkUtils.addIfNotNull(params, ApiParams.STATE, request.getCsrfToken());
-        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.GET_ACCESS_TOKEN,
+        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.GET_ACCESS_TOKEN, ApiURLs.GET_ACCESS_TOKEN,
                 SdkUtils.buildUrlQueryString(params), null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return validateAndBuildResponse(request.getCsrfToken(), result);
     }
@@ -83,8 +83,9 @@ public final class TokenService {
         params.put(ApiParams.REFRESH_TOKEN, request.getRefreshToken());
         params.put(ApiParams.CLIENT_ID, PlenigoManager.get().getCompanyId());
         SdkUtils.addIfNotNull(params, ApiParams.STATE, request.getCsrfToken());
-        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, SdkUtils.buildUrlQueryString(params)
-                , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, ApiURLs.REFRESH_ACCESS_TOKEN
+                , SdkUtils.buildUrlQueryString(params) , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
+                , PlenigoManager.get().getSecret()));
 
         result.put(ApiResults.REFRESH_TOKEN, request.getRefreshToken());
         return validateAndBuildResponse(request.getCsrfToken(), result);

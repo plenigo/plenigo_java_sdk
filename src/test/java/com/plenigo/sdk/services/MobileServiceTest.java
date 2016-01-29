@@ -22,6 +22,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
@@ -57,7 +58,7 @@ public class MobileServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         MobileSecretInfo mobileSecretInfo = MobileService.createMobileSecret("customerId", 6);
@@ -70,7 +71,7 @@ public class MobileServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         MobileSecretInfo mobileSecretInfo = MobileService.getMobileSecret("customerId");
@@ -82,7 +83,7 @@ public class MobileServiceTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(ApiResults.CUST_ID, "customerId");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         String customerId = MobileService.verifyMobileSecret("email", "mobileSecret");
@@ -93,7 +94,7 @@ public class MobileServiceTest {
     public void testSuccessfulDeleteMobileSecret() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.delete(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         boolean customerId = MobileService.deleteMobileSecret("customerId");

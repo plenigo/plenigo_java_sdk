@@ -3,6 +3,7 @@ package com.plenigo.sdk.services;
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.internal.ApiResults;
+import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.models.CategoryData;
@@ -30,10 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -62,7 +63,7 @@ public class ProductServiceTest {
         mockPlenigoManager();
         RestClient client = Mockito.mock(RestClient.class);
         Map<String, Object> map = getSampleProductMap();
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -158,7 +159,7 @@ public class ProductServiceTest {
         map.put(ApiResults.ACTION_PERIOD_NAME, null);
         map.put(ApiResults.ACTION_PERIOD_TERM, null);
         map.put(ApiResults.ACTION_PERIOD_PRICE, null);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -179,13 +180,13 @@ public class ProductServiceTest {
         try {
             PowerMockito.doCallRealMethod().
                     when(client,
-                            method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class))
-                    .withArguments(any(HttpURLConnection.class), anyString());
+                            method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class, String.class))
+                    .withArguments(any(HttpURLConnection.class), anyString(), anyString());
             ProductService instance = Whitebox.invokeConstructor(ProductService.class);
             ReflectionTestUtils.setField(instance, "client", client);
             ProductService.getProductData("sampleProd");
         } catch (PlenigoException pe) {
-            assertEquals("400", pe.getResponseCode());
+            assertEquals(ErrorCode.INVALID_PARAMETERS.getCode(), pe.getResponseCode());
             assertNotNull(pe.getErrors());
         }
     }
@@ -202,7 +203,7 @@ public class ProductServiceTest {
         map.put(ApiResults.PAGE_SIZE, pageSize);
         map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.PROD_ID, "lastId"));
         List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             Map<String, String> productInformation = new HashMap<String, String>();
             productInformation.put(ApiResults.PROD_ID, "prodId" + i);
             productInformation.put(ApiResults.TITLE, "title" + i);
@@ -211,7 +212,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -233,7 +234,7 @@ public class ProductServiceTest {
         map.put(ApiResults.PAGE_SIZE, pageSize);
         map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.PROD_ID, "lastId"));
         List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             Map<String, String> productInformation = new HashMap<String, String>();
             productInformation.put(ApiResults.PROD_ID, "prodId" + i);
             productInformation.put(ApiResults.TITLE, "title" + i);
@@ -242,7 +243,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -265,7 +266,7 @@ public class ProductServiceTest {
         map.put(ApiResults.PAGE_SIZE, pageSize);
         map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.CATEGORY_ID, "lastId"));
         List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             Map<String, String> categoryInformation = new HashMap<String, String>();
             categoryInformation.put(ApiResults.CATEGORY_ID, "catId" + i);
             categoryInformation.put(ApiResults.TITLE, "title" + i);
@@ -273,7 +274,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -296,7 +297,7 @@ public class ProductServiceTest {
         map.put(ApiResults.PAGE_SIZE, pageSize);
         map.put(ApiResults.LAST_ID, Collections.singletonMap(ApiResults.CATEGORY_ID, "lastId"));
         List<Map<String, String>> elements = new ArrayList<Map<String, String>>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             Map<String, String> categoryInformation = new HashMap<String, String>();
             categoryInformation.put(ApiResults.CATEGORY_ID, "catId" + i);
             categoryInformation.put(ApiResults.TITLE, "title" + i);
@@ -304,7 +305,7 @@ public class ProductServiceTest {
         }
         map.put(ApiResults.ELEMENTS, elements);
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -325,7 +326,7 @@ public class ProductServiceTest {
         map.put(ApiResults.VALIDITY_TIME, ValidityTime.DAY.getValue());
 
 
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), anyMap()))
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
