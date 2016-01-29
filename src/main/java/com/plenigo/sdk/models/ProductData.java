@@ -20,23 +20,26 @@ public class ProductData implements Serializable {
     private PricingData pricingData;
     private ActionPeriod actionPeriod;
     private List<Image> images;
-
     private boolean collectible;
+    private int maxParallelAccess;
+    private String customInfo;
 
     /**
      * Product Data constructor, must be filled with the required data.
      *
-     * @param id           The product id
-     * @param subscription The product subscription
-     * @param title        The title
-     * @param description  The description
-     * @param collectible  Flag indicating if product is part of the collectible model
-     * @param pricingData  The pricing information
-     * @param actionPeriod The action period information
-     * @param images       The images information related to the product
+     * @param id                The product id
+     * @param subscription      The product subscription
+     * @param title             The title
+     * @param description       The description
+     * @param collectible       Flag indicating if product is part of the collectible model
+     * @param pricingData       The pricing information
+     * @param actionPeriod      The action period information
+     * @param images            The images information related to the product
+     * @param maxParallelAccess The max parallel access
+     * @param customInfo        The custom information
      */
     public ProductData(String id, Subscription subscription, String title, String description, Boolean collectible, PricingData pricingData,
-                       ActionPeriod actionPeriod, List<Image> images) {
+                       ActionPeriod actionPeriod, List<Image> images, int maxParallelAccess, String customInfo) {
         this.id = id;
         if (subscription == null) {
             subscription = new Subscription(false, 0, 0, false);
@@ -54,6 +57,8 @@ public class ProductData implements Serializable {
         }
         this.actionPeriod = actionPeriod;
         this.images = images;
+        this.maxParallelAccess = maxParallelAccess;
+        this.customInfo = customInfo;
     }
 
     /**
@@ -203,7 +208,28 @@ public class ProductData implements Serializable {
 
     @Override
     public String toString() {
-        return "ProductData{" + "id='" + id + '\'' + ", subscription=" + subscription + ", title='" + title + '\'' + ", description='" + description + '\''
-                + ", collectible='" + collectible + '\'' + ", pricingData=" + pricingData + ", actionPeriod=" + actionPeriod + ", images=" + images + '}';
+        return "ProductData{" + "id='" + id + '\'' + ", subscription=" + subscription + ", title='" + title + '\''
+                + ", description='" + description + '\'' + ", pricingData=" + pricingData
+                + ", actionPeriod=" + actionPeriod + ", images=" + images
+                + ", collectible=" + collectible + ", maxParallelAccess=" + maxParallelAccess
+                + ", customInfo=" + customInfo + '}';
+    }
+
+    /**
+     * Returns the max parallel access of a product.
+     *
+     * @return max parallel access
+     */
+    public int getMaxParallelAccess() {
+        return maxParallelAccess;
+    }
+
+    /**
+     * Returns the custom info of the product.
+     *
+     * @return custom info
+     */
+    public String getCustomInfo() {
+        return customInfo;
     }
 }
