@@ -101,6 +101,20 @@ public class Product implements Serializable {
         this.id = prodId;
     }
 
+
+    /**
+     * This constructor receives an id parameter,  it is recommended to use
+     * this one for plenigo managed products that want to use the override flag for checkout.
+     *
+     * @param prodId product id
+     * @param price  product price
+     */
+    public Product(final String prodId, Double price) {
+        super();
+        this.id = prodId;
+        this.price = price;
+    }
+
     /**
      * Returns the currency of the product's price.
      *
