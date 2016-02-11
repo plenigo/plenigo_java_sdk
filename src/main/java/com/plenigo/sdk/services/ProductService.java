@@ -221,7 +221,14 @@ public final class ProductService {
         Subscription subscriptionData = buildSubscription(response);
         ActionPeriod actionPeriod = buildActionPeriod(response);
         List<Image> imageData = buildImageList(response);
-        return new ProductData(id, subscriptionData, title, description, collectible, pricingData, actionPeriod, imageData);
+        String maxParallelAccessStr = SdkUtils.getValueIfNotNull(response, ApiResults.MAX_PARALLEL_APP_ACCESS);
+        int maxParallelAccess = 0;
+        if (!maxParallelAccessStr.isEmpty()) {
+            maxParallelAccess = Integer.parseInt(maxParallelAccessStr);
+        }
+
+        String customInfo = SdkUtils.getValueIfNotNull(response, ApiResults.CUSTOM_INFO);
+        return new ProductData(id, subscriptionData, title, description, collectible, pricingData, actionPeriod, imageData, maxParallelAccess, customInfo);
     }
 
     /**

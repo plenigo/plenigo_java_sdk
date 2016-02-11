@@ -7,10 +7,10 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.models.Product}.
+ * Tests for {@link Product}.
  * </p>
  */
-public class ProductTest {
+public class CompanyUserTest {
     @Test
     public void testToString() {
         Product prod = new Product("");

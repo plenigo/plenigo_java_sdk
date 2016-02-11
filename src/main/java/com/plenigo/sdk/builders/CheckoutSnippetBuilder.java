@@ -2,11 +2,11 @@ package com.plenigo.sdk.builders;
 
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
-import com.plenigo.sdk.internal.ErrorCode;
-import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.internal.ApiParams;
-import com.plenigo.sdk.internal.util.SdkUtils;
+import com.plenigo.sdk.internal.ErrorCode;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
+import com.plenigo.sdk.internal.util.SdkUtils;
+import com.plenigo.sdk.models.Product;
 import com.plenigo.sdk.models.ProductType;
 
 import java.math.BigDecimal;
@@ -67,12 +67,25 @@ public class CheckoutSnippetBuilder {
      * Shipping costs related to the product checkout.
      */
     private BigDecimal shippingCost;
+    /**
+     * Enables override mode.
+     */
+    private Boolean overrideMode;
+
+    /**
+     * Login token.
+     */
+    private String loginToken;
 
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
      */
-    private static final String CHECKOUT_SNIPPET_TPL = "plenigo.checkout('%s');";
+    private static final String CHECKOUT_SNIPPET_TPL = "plenigo.checkout(%s);";
+    private static final String CHECKOUT_LOGIN_SNIPPET_TPL = "plenigo.checkoutWithRemoteLogin(%s);";
+    private static final String CHECKOUT_PARAMETER_TPL = "'%s'";
+    private static final String CHECKOUT_PARAMETER_SEPARATOR = ",";
+
 
     /**
      * This constructor takes a {@link Product} object as a parameter.
@@ -100,9 +113,16 @@ public class CheckoutSnippetBuilder {
      * @throws com.plenigo.sdk.PlenigoException whenever an error happens
      */
     public String build() throws PlenigoException {
+        String snippetTpl = CHECKOUT_SNIPPET_TPL;
         String encodedData = buildEncodedData();
+        String parameters = String.format(CHECKOUT_PARAMETER_TPL, encodedData);
+        if (loginToken != null && !loginToken.isEmpty()) {
+            String loginParameter = String.format(CHECKOUT_PARAMETER_TPL, loginToken);
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + loginParameter;
+            snippetTpl = CHECKOUT_LOGIN_SNIPPET_TPL;
+        }
         String snippet = String
-                .format(CHECKOUT_SNIPPET_TPL, encodedData);
+                .format(snippetTpl, parameters);
         LOGGER.log(Level.FINEST, "Built checkout snippet: {0}.", snippet);
         return snippet;
     }
@@ -156,6 +176,7 @@ public class CheckoutSnippetBuilder {
             SdkUtils.addIfNotNull(map, ApiParams.CATEGORY_ID, product.getCategoryId());
             SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
             SdkUtils.addIfNotNull(map, ApiParams.SHIPPING_COST, shippingCost);
+            SdkUtils.addIfNotNull(map, ApiParams.OVERRIDE_MODE, overrideMode);
             if (csrfToken != null) {
                 LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
                 map.put(ApiParams.CSRF_TOKEN, csrfToken);
@@ -247,6 +268,34 @@ public class CheckoutSnippetBuilder {
             throw new PlenigoException(ErrorCode.SHIPPING_NOT_ALLOWED.getCode(), ErrorCode.SHIPPING_NOT_ALLOWED.getMsg());
         }
         this.shippingCost = shippingCost;
+        return this;
+    }
+
+    /**
+     * Enables override mode.
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException if a validation error happens
+     */
+    public CheckoutSnippetBuilder withOverrideMode() throws PlenigoException {
+        this.overrideMode = true;
+        if (product.getPrice() == null) {
+            ErrorCode errorCode = ErrorCode.OVERRIDE_MODE_REQUIRES_PRICE;
+            throw new PlenigoException(errorCode.getCode(), errorCode.getMsg());
+        }
+        return this;
+    }
+
+    /**
+     * Creates a checkout snippet with a login token.
+     *
+     * @param loginToken Login token
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     */
+    public CheckoutSnippetBuilder withLoginToken(String loginToken) {
+        this.loginToken = loginToken;
         return this;
     }
 
