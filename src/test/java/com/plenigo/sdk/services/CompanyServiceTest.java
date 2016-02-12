@@ -2,13 +2,11 @@ package com.plenigo.sdk.services;
 
 import com.plenigo.sdk.PlenigoException;
 import com.plenigo.sdk.PlenigoManager;
-import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.HttpConfig;
 import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.models.CompanyUser;
 import com.plenigo.sdk.models.ElementList;
-import com.plenigo.sdk.models.MobileSecretInfo;
 import com.plenigo.sdk.models.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,10 +57,10 @@ public class CompanyServiceTest {
     public void testSuccessfulGetUserList() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        ElementList<CompanyUser> list = CompanyService.getUserList(new PageRequest(0,10));
+        ElementList<CompanyUser> list = CompanyService.getUserList(new PageRequest(0, 10));
         assertNotNull(list);
     }
 
@@ -70,7 +68,7 @@ public class CompanyServiceTest {
     public void testSuccessfulGetUserListWithUserIds() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         List<CompanyUser> list = CompanyService.getUserList(Collections.singletonList("userId"));

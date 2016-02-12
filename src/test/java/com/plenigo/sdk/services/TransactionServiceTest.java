@@ -5,9 +5,6 @@ import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.HttpConfig;
 import com.plenigo.sdk.internal.util.RestClient;
-import com.plenigo.sdk.models.CompanyUser;
-import com.plenigo.sdk.models.ElementList;
-import com.plenigo.sdk.models.PageRequest;
 import com.plenigo.sdk.models.TransactionList;
 import com.plenigo.sdk.models.TransactionSearchRequest;
 import org.junit.Before;
@@ -20,9 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
@@ -59,10 +54,10 @@ public class TransactionServiceTest {
     public void testSuccessfulSearchTransactions() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        TransactionList list = TransactionService.searchTransactions(new TransactionSearchRequest(0,10));
+        TransactionList list = TransactionService.searchTransactions(new TransactionSearchRequest(0, 10));
         assertNotNull(list);
     }
 }

@@ -64,7 +64,8 @@ public final class CompanyService {
         ValidationUtils.validate(request);
         params.put(ApiParams.PAGE_SIZE, request.getPageSize());
         params.put(ApiParams.PAGE_NUMBER, request.getPageNumber());
-        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS, buildUrlQueryString(params),
+        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS, ApiURLs.COMPANY_USERS,
+                buildUrlQueryString(params),
                 JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildElementListForCompanyUsers(objectMap, request.getPageNumber());
     }
@@ -82,7 +83,8 @@ public final class CompanyService {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(ApiParams.USER_IDS, toCsv(userList));
         Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS_SELECT,
-                buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                ApiURLs.COMPANY_USERS_SELECT, buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                        PlenigoManager.get().getSecret()));
         Object companyUsersObj = objectMap.get(ApiResults.ELEMENTS);
         return buildCompanyUserList(companyUsersObj);
     }

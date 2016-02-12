@@ -61,10 +61,10 @@ public final class ProductService {
      * @throws PlenigoException whenever an error happens
      */
     public static ProductData getProductData(String productId) throws PlenigoException {
-        LOGGER.log(Level.FINEST, "Getting the product data for the product id: {0} using the following company id: {1}"
-                , new Object[]{productId, PlenigoManager.get().getCompanyId()});
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT, ApiURLs.GET_PRODUCT + "/" + productId, null
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        LOGGER.log(Level.FINEST, "Getting the product data for the product id: {0} using the following company id: {1}",
+                new Object[]{productId, PlenigoManager.get().getCompanyId()});
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT, ApiURLs.GET_PRODUCT + "/" + productId, null,
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from product id {0} : {1}", new Object[]{productId, response});
         ProductData productData = buildProductData(response);
         LOGGER.log(Level.FINEST, "Built Product Data from product id {0} : {1}", new Object[]{productId, productData});
@@ -87,8 +87,8 @@ public final class ProductService {
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
         }
-        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_PRODUCTS, SdkUtils.buildUrlQueryString(params),
-                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_PRODUCTS, ApiURLs.LIST_PRODUCTS,
+                SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildProductList(objectMap);
     }
 
@@ -108,8 +108,8 @@ public final class ProductService {
         if (lastId != null && !lastId.trim().isEmpty()) {
             params.put(ApiParams.LAST_ID, lastId);
         }
-        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, SdkUtils.buildUrlQueryString(params),
-                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, ApiURLs.LIST_CATEGORIES,
+                SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
 
         return buildCategoryList(objectMap);
     }
@@ -368,7 +368,7 @@ public final class ProductService {
     public static CategoryData getCategoryData(String categoryId) throws PlenigoException {
         LOGGER.log(Level.FINEST, "Getting the category data for the category id: {0} using the following company id: {1}",
                 new Object[]{categoryId, PlenigoManager.get().getCompanyId()});
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_CATEGORY + "/" + categoryId, null,
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_CATEGORY, ApiURLs.GET_CATEGORY + "/" + categoryId, null,
                 JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from category {0} : {1}", new Object[]{categoryId, response});
         CategoryData categoryData = buildCategoryData(response);

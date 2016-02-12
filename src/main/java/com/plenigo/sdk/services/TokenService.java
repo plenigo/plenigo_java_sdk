@@ -83,9 +83,9 @@ public final class TokenService {
         params.put(ApiParams.REFRESH_TOKEN, request.getRefreshToken());
         params.put(ApiParams.CLIENT_ID, PlenigoManager.get().getCompanyId());
         SdkUtils.addIfNotNull(params, ApiParams.STATE, request.getCsrfToken());
-        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, ApiURLs.REFRESH_ACCESS_TOKEN
-                , SdkUtils.buildUrlQueryString(params) , null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
-                , PlenigoManager.get().getSecret()));
+        Map<String, Object> result = client.post(PlenigoManager.get().getOauthUrl(), ApiURLs.REFRESH_ACCESS_TOKEN, ApiURLs.REFRESH_ACCESS_TOKEN,
+                SdkUtils.buildUrlQueryString(params), null, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                        PlenigoManager.get().getSecret()));
 
         result.put(ApiResults.REFRESH_TOKEN, request.getRefreshToken());
         return validateAndBuildResponse(request.getCsrfToken(), result);
@@ -107,8 +107,8 @@ public final class TokenService {
         if (result.containsKey(ApiResults.ERROR)) {
             throw new PlenigoException(result.get(ApiResults.ERROR).toString(), result.get(ApiResults.ERROR_DESCRIPTION).toString());
         } else if (state != null && (responseState == null || !state.equals(responseState))) {
-            LOGGER.log(Level.FINEST, "State used for the request and the response were different!: expected state: {0}, result state: {1}"
-                    , new Object[]{state, responseState});
+            LOGGER.log(Level.FINEST, "State used for the request and the response were different!: expected state: {0}, result state: {1}",
+                    new Object[]{state, responseState});
             throw new IllegalArgumentException("The request and response CSRF Token are different! request=" + state + " ; response=" + result
                     .get(ApiResults.STATE));
         } else {

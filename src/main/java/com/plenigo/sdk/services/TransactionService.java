@@ -72,8 +72,8 @@ public final class TransactionService {
         SdkUtils.addIfNotNull(params, ApiParams.TRANSACTION_STATUS, request.getTransactionStatus());
         SdkUtils.addIfNotNull(params, ApiParams.PAYMENT_METHOD, request.getPaymentMethod());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode());
-        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.TX_SEARCH, buildUrlQueryString(params),
-                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.TX_SEARCH, ApiURLs.TX_SEARCH,
+                buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildTransactionList(objectMap, request);
     }
 

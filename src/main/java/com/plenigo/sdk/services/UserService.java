@@ -105,14 +105,14 @@ public final class UserService {
      * @throws com.plenigo.sdk.PlenigoException whenever an error happens
      */
     public static boolean hasUserBought(List<String> productIds, String cookieHeader) throws PlenigoException {
-        LOGGER.log(Level.FINEST, "Checking if an user has bought a product with the ids: {0} and the cookie header: {1}"
-                , new Object[]{productIds, cookieHeader});
+        LOGGER.log(Level.FINEST, "Checking if an user has bought a product with the ids: {0} and the cookie header: {1}",
+                new Object[]{productIds, cookieHeader});
         Customer customer = getCustomerInfo(cookieHeader);
         if (hasExpired(customer)) {
             return false;
         }
-        return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customer.getCustomerId(), PlenigoManager.get().getSecret()
-                , PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds);
+        return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customer.getCustomerId(), PlenigoManager.get().getSecret(),
+                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds);
     }
 
 
@@ -183,8 +183,8 @@ public final class UserService {
      */
     public static boolean isPaywallEnabled() throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.PAYWALL_STATE, ApiURLs.PAYWALL_STATE
-                , SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.PAYWALL_STATE, ApiURLs.PAYWALL_STATE,
+                SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         Object paywallState = objectMap.get(ApiResults.PAYWALL_STATE);
         boolean isEnabled = false;
         if (paywallState != null) {
@@ -230,9 +230,9 @@ public final class UserService {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode());
-        Map<String, Object> stringObjectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.USER_PRODUCTS, String.format(ApiURLs.USER_PRODUCTS
-                        , customer.getCustomerId()), SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
-                , PlenigoManager.get().getSecret()));
+        Map<String, Object> stringObjectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.USER_PRODUCTS, String.format(ApiURLs.USER_PRODUCTS,
+                customer.getCustomerId()), SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                PlenigoManager.get().getSecret()));
         fillProductsBoughtObject(stringObjectMap, singlePaymentProducts, subscriptionProducts);
         return new ProductsBought(subscriptionProducts, singlePaymentProducts);
     }
