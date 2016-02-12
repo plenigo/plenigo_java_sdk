@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 /**
@@ -19,17 +19,21 @@ public class TransactionListTest {
     public static final int PAGE_NUMBER = 0;
     public static final int SIZE = 1;
     public static final int TOTAL_ELEMENTS = 1;
-    public static final List<String> LIST = Collections.singletonList("sample");
-    ElementList<String> list;
+    public static final Transaction TRANSACTION = new Transaction("id", "custId", "p", "t", 1.00, 2.00, 3.00, "DE", "USD", null,
+            new Date(), null, 2.00, 3.00, 4.00, 123L, "1235D", "12354A");
+    public static final List<Transaction> LIST = Collections.singletonList(TRANSACTION);
+    public static final Date START_DATE = new Date();
+    public static final Date END_DATE = new Date();
+    TransactionList list;
 
     @Before
     public void setup(){
-        list = new ElementList<String>(PAGE_NUMBER, SIZE, TOTAL_ELEMENTS, LIST);
+        list = new TransactionList(PAGE_NUMBER, SIZE, TOTAL_ELEMENTS, LIST, START_DATE, END_DATE);
     }
 
     @Test
-    public void testGetPageNumber(){
-        assertEquals("Page number is not equals", PAGE_NUMBER, list.getPageNumber());
+    public void testGetStartDate(){
+        assertEquals("Start dateis not equals", START_DATE, list.getStartDate());
     }
 
     @Test

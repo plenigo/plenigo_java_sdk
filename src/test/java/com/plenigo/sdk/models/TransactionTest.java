@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * <p>
@@ -14,124 +13,122 @@ import static org.junit.Assert.assertNotNull;
  * </p>
  */
 public class TransactionTest {
-
-    public static final String CUSTOMER_ID = "customerId";
-    public static final String EMAIL = "email@example.com";
-    public static final String USERNAME = "sampleuser";
-    public static final String LANGUAGE = "en";
-    public static final String GENDER = "MALE";
-    public static final String FIRST_NAME = "john";
-    public static final String NAME = "powers";
-    public static final String MOBILE_NUMBER = "0011234123";
-    public static final String USER_STATE = "ACTIVE";
-    public static final Date BIRTHDAY = new Date();
-    public static final String POST_CODE = "00123";
-    public static final String STREET = "Sam Street";
-    public static final String ADDITIONAL_ADDRESS_INFO = "Near Joseph Street";
-    public static final String CITY = "New York";
-    public static final String STATE = "New York";
-    public static final String COUNTRY = "United States";
-    public static final String AGREEMENT_STATE = "AGREE";
-    public static final CompanyUserBillingAddress COMPANY_USER_BILLING_ADDRESS = new CompanyUserBillingAddress("MALE", "Jonas", "Bishop", "US Company", "Street 5", "Near Jonas Street", "00101", "New York", "New York",
-            "United States", "012312309");
-    CompanyUser companyUser;
+    public static final String TRANSACTION_ID = "id";
+    public static final String CUSTOMER_ID = "custId";
+    public static final String PRODUCT_ID = "p";
+    public static final String TITLE = "t";
+    public static final double PRICE = 1.00;
+    public static final double TAXES_PERCENTAGE = 2.00;
+    public static final double TAXES_AMOUNT = 3.00;
+    public static final String TAXES_COUNTRY = "DE";
+    public static final String CURRENCY = "USD";
+    public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.BANK_ACCOUNT;
+    public static final Date TRANSACTION_DATE = new Date();
+    public static final TransactionStatus TRANSACTION_STATUS = TransactionStatus.BOOKED;
+    public static final double SHIPPING_COSTS = 2.00;
+    public static final double SHIPPING_COSTS_TAXES_PERCENTAGE = 3.00;
+    public static final double SHIPPING_COSTS_TAXES_AMOUNT = 4.00;
+    public static final long BILLING_ID = 123L;
+    public static final String CANCELLATION_TRANSACTION_ID = "1235D";
+    public static final String CANCELLED_TRANSACTION_ID = "12354A";
+    Transaction transaction;
 
     @Before
-    public void setup(){
-        companyUser = new CompanyUser(CUSTOMER_ID, EMAIL, USERNAME, LANGUAGE, GENDER, FIRST_NAME, NAME, MOBILE_NUMBER, USER_STATE,
-                BIRTHDAY, POST_CODE, STREET, ADDITIONAL_ADDRESS_INFO, CITY, STATE, COUNTRY, AGREEMENT_STATE,
-                COMPANY_USER_BILLING_ADDRESS);
+    public void setup() {
+        transaction = new Transaction(TRANSACTION_ID, CUSTOMER_ID, PRODUCT_ID, TITLE, PRICE, TAXES_PERCENTAGE, TAXES_AMOUNT, TAXES_COUNTRY,
+                CURRENCY, PAYMENT_METHOD, TRANSACTION_DATE, TRANSACTION_STATUS, SHIPPING_COSTS, SHIPPING_COSTS_TAXES_PERCENTAGE, SHIPPING_COSTS_TAXES_AMOUNT,
+                BILLING_ID, CANCELLATION_TRANSACTION_ID, CANCELLED_TRANSACTION_ID);
     }
 
     @Test
-    public void testGetCustomerId(){
-        assertEquals("Customer id is not equals", CUSTOMER_ID, companyUser.getCustomerId());
+    public void testGetTransactionId() {
+        assertEquals("Transaction id is not equals", TRANSACTION_ID, transaction.getTransactionId());
     }
 
     @Test
-    public void testGetEmail(){
-        assertEquals("Email is not equals", EMAIL, companyUser.getEmail());
+    public void testGetCustomerId() {
+        assertEquals("Customer id is not equals", CUSTOMER_ID, transaction.getCustomerId());
     }
 
     @Test
-    public void testGetUsername(){
-        assertEquals("Username is not equals", USERNAME, companyUser.getUsername());
+    public void testGetProductId() {
+        assertEquals("Product id is not equals", PRODUCT_ID, transaction.getProductId());
+    }
+
+    @Test
+    public void testGetTitle() {
+        assertEquals("Title is not equals", TITLE, transaction.getTitle());
+    }
+
+    @Test
+    public void testGetPrice() {
+        assertEquals("Price is not equals", PRICE, transaction.getPrice(), 0.0);
     }
 
 
     @Test
-    public void testGetLanguage(){
-        assertEquals("Language is not equals", LANGUAGE, companyUser.getLanguage());
+    public void testGetTaxesPercentage() {
+        assertEquals("Taxes percentage is not equals", TAXES_PERCENTAGE, transaction.getTaxesPercentage(), 0.0);
+    }
+
+    @Test
+    public void testGetTaxesAmount() {
+        assertEquals("Taxes amount is not equals", TAXES_AMOUNT, transaction.getTaxesAmount(), 0.0);
+    }
+
+    @Test
+    public void testGetTaxesCountry() {
+        assertEquals("Taxes country is not equals", TAXES_COUNTRY, transaction.getTaxesCountry());
+    }
+
+    @Test
+    public void testGetCurrency() {
+        assertEquals("Currency is not equals", CURRENCY, transaction.getCurrency());
+    }
+
+    @Test
+    public void testGetPaymentMethod() {
+        assertEquals("Payment method is not equals", PAYMENT_METHOD, transaction.getPaymentMethod());
+    }
+
+    @Test
+    public void testGetTransactionDate() {
+        assertEquals("Transaction date is not equals", TRANSACTION_DATE, transaction.getTransactionDate());
+    }
+
+    @Test
+    public void testGetTransactionStatus() {
+        assertEquals("Transaction status is not equals", TRANSACTION_STATUS, transaction.getStatus());
+    }
+
+    @Test
+    public void testGetShippingCosts() {
+        assertEquals("Shipping costs are not equal", SHIPPING_COSTS, transaction.getShippingCosts(), 0.0);
+    }
+
+    @Test
+    public void testGetShippingCostsTaxesPercentage() {
+        assertEquals("Shipping costs taxes percentage are not equal", SHIPPING_COSTS_TAXES_PERCENTAGE, transaction.getShippingCostsTaxesPercentage(), 0.0);
+    }
+
+    @Test
+    public void testGetShippingCostsTaxesAmount() {
+        assertEquals("Shipping costs taxes amount is not equal", SHIPPING_COSTS_TAXES_AMOUNT, transaction.getShippingCostsTaxesAmount(), 0.0);
     }
 
 
     @Test
-    public void testGetGender(){
-        assertEquals("Gender is not equals", GENDER, companyUser.getGender());
+    public void testGetBillingid() {
+        assertEquals("Billing id is not equal", BILLING_ID, transaction.getBillingId());
     }
 
     @Test
-    public void testGetFirstName(){
-        assertEquals("First name is not equals", FIRST_NAME, companyUser.getFirstName());
+    public void testGetCancellationTransactionId() {
+        assertEquals("Cancellation transaction id is not equal", CANCELLATION_TRANSACTION_ID, transaction.getCancellationTransactionId());
     }
 
     @Test
-    public void testGetName(){
-        assertEquals("Name is not equals", NAME, companyUser.getName());
-    }
-
-    @Test
-    public void testGetMobileNumber(){
-        assertEquals("Mobile Number is not equals", MOBILE_NUMBER, companyUser.getMobileNumber());
-    }
-
-    @Test
-    public void testGetUserState(){
-        assertEquals("User state is not equals", USER_STATE, companyUser.getUserState());
-    }
-
-    @Test
-    public void testGetBirthday(){
-        assertEquals("Birthday is not equals", BIRTHDAY, companyUser.getBirthday());
-    }
-
-    @Test
-    public void testGetPostCode(){
-        assertEquals("Post code is not equals", POST_CODE, companyUser.getPostCode());
-    }
-
-    @Test
-    public void testGetStreet(){
-        assertEquals("Street is not equals", STREET, companyUser.getStreet());
-    }
-
-    @Test
-    public void testGetAdditionalAddressInfo(){
-        assertEquals("Additional address info is not equals", ADDITIONAL_ADDRESS_INFO, companyUser.getAdditionalAddressInfo());
-    }
-
-    @Test
-    public void testGetCity(){
-        assertEquals("City is not equals", CITY, companyUser.getCity());
-    }
-
-    @Test
-    public void testGetState(){
-        assertEquals("State is not equals", STATE, companyUser.getState());
-    }
-
-    @Test
-    public void testGetCountry(){
-        assertEquals("Country is not equals", COUNTRY, companyUser.getCountry());
-    }
-
-    @Test
-    public void testGetAgreementState(){
-        assertEquals("Agreement state is not equals", AGREEMENT_STATE, companyUser.getAgreementState());
-    }
-
-    @Test
-    public void testGetCompanyUserBillingAddress(){
-        assertEquals("Company user billing address is not equals", COMPANY_USER_BILLING_ADDRESS, companyUser.getCompanyUserBillingAddress());
+    public void testGetCancelledTransactionId() {
+        assertEquals("Cancelled transaction id is not equal", CANCELLED_TRANSACTION_ID, transaction.getCancelledTransactionId());
     }
 }

@@ -96,9 +96,6 @@
             <property name="max" value="160"/>
         </module>
         <module name="MethodLength"/>
-        <module name="ParameterNumber">
-            <property name="max" value="11" />
-        </module>
 
 
 

@@ -6,7 +6,10 @@ import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.HttpConfig;
 import com.plenigo.sdk.internal.util.RestClient;
+import com.plenigo.sdk.models.CompanyUser;
+import com.plenigo.sdk.models.ElementList;
 import com.plenigo.sdk.models.MobileSecretInfo;
+import com.plenigo.sdk.models.PageRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +20,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
@@ -26,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
 /**
- * Tests for {@link MobileService}.
+ * Tests for {@link CompanyService}.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({EncryptionUtils.class, PlenigoManager.class, RestClient.class})
@@ -44,59 +49,31 @@ public class CompanyServiceTest {
 
     @Test
     public void testConstructorIsPrivate() throws Exception {
-        Constructor constructor = MobileService.class.getDeclaredConstructor();
+        Constructor constructor = CompanyService.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
         constructor.newInstance();
     }
 
-
     @Test
-    public void testSuccessfulCreateMobileSecret() throws Exception {
+    public void testSuccessfulGetUserList() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(ApiResults.CUST_ID, "customerId");
-        map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
-        RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
-                .thenReturn(map);
-        HttpConfig.get().setClient(client);
-        MobileSecretInfo mobileSecretInfo = MobileService.createMobileSecret("customerId", 6);
-        assertNotNull(mobileSecretInfo);
-    }
-
-    @Test
-    public void testSuccessfulGetMobileSecret() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(ApiResults.CUST_ID, "customerId");
-        map.put(ApiResults.MOBILE_APP_SECRET, "mobileAppSecret");
         RestClient client = Mockito.mock(RestClient.class);
         Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        MobileSecretInfo mobileSecretInfo = MobileService.getMobileSecret("customerId");
-        assertNotNull(mobileSecretInfo);
+        ElementList<CompanyUser> list = CompanyService.getUserList(new PageRequest(0,10));
+        assertNotNull(list);
     }
 
     @Test
-    public void testSuccessfulVerifyMobileSecret() throws Exception {
+    public void testSuccessfulGetUserListWithUserIds() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(ApiResults.CUST_ID, "customerId");
         RestClient client = Mockito.mock(RestClient.class);
         Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        String customerId = MobileService.verifyMobileSecret("email", "mobileSecret");
-        assertNotNull(customerId);
-    }
-
-    @Test
-    public void testSuccessfulDeleteMobileSecret() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
-                .thenReturn(map);
-        HttpConfig.get().setClient(client);
-        boolean customerId = MobileService.deleteMobileSecret("customerId");
-        assertTrue(customerId);
+        List<CompanyUser> list = CompanyService.getUserList(Collections.singletonList("userId"));
+        assertNotNull(list);
     }
 }

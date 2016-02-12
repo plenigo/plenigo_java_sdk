@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * <p>
- * Tests for {@link com.plenigo.sdk.internal.util.EncryptionUtils}.
+ * Tests for {@link ProductData}.
  * </p>
  */
 public class ProductDataTest {

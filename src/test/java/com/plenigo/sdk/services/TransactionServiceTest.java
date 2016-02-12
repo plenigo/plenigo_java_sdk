@@ -8,6 +8,8 @@ import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.models.CompanyUser;
 import com.plenigo.sdk.models.ElementList;
 import com.plenigo.sdk.models.PageRequest;
+import com.plenigo.sdk.models.TransactionList;
+import com.plenigo.sdk.models.TransactionSearchRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
 /**
- * Tests for {@link MobileService}.
+ * Tests for {@link TransactionService}.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({EncryptionUtils.class, PlenigoManager.class, RestClient.class})
@@ -47,31 +49,20 @@ public class TransactionServiceTest {
 
     @Test
     public void testConstructorIsPrivate() throws Exception {
-        Constructor constructor = CompanyService.class.getDeclaredConstructor();
+        Constructor constructor = TransactionService.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
         constructor.newInstance();
     }
 
     @Test
-    public void testSuccessfulGetUserList() throws Exception {
+    public void testSuccessfulSearchTransactions() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
         Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        ElementList<CompanyUser> list = CompanyService.getUserList(new PageRequest(0,10));
-        assertNotNull(list);
-    }
-
-    @Test
-    public void testSuccessfulGetUserListWithUserIds() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
-                .thenReturn(map);
-        HttpConfig.get().setClient(client);
-        List<CompanyUser> list = CompanyService.getUserList(Collections.singletonList("userId"));
+        TransactionList list = TransactionService.searchTransactions(new TransactionSearchRequest(0,10));
         assertNotNull(list);
     }
 }

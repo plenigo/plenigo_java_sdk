@@ -5,26 +5,17 @@ import com.plenigo.sdk.PlenigoManager;
 import com.plenigo.sdk.internal.ApiParams;
 import com.plenigo.sdk.internal.ApiResults;
 import com.plenigo.sdk.internal.ApiURLs;
-import com.plenigo.sdk.internal.models.Customer;
-import com.plenigo.sdk.internal.services.InternalUserApiService;
-import com.plenigo.sdk.internal.util.CookieParser;
-import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.internal.util.HttpConfig;
 import com.plenigo.sdk.internal.util.JWT;
-import com.plenigo.sdk.internal.util.RestClient;
 import com.plenigo.sdk.internal.util.SdkUtils;
+import com.plenigo.sdk.internal.util.ValidationUtils;
 import com.plenigo.sdk.models.CompanyUser;
+import com.plenigo.sdk.models.CompanyUserBillingAddress;
 import com.plenigo.sdk.models.ElementList;
-import com.plenigo.sdk.models.ProductsBought;
-import com.plenigo.sdk.models.SinglePaymentProduct;
-import com.plenigo.sdk.models.SubscriptionProduct;
-import com.plenigo.sdk.models.UserData;
+import com.plenigo.sdk.models.PageRequest;
 
-import java.net.HttpCookie;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,10 +24,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.plenigo.sdk.internal.util.SdkUtils.buildUrlQueryString;
+import static com.plenigo.sdk.internal.util.SdkUtils.getValueIfNotNull;
+import static com.plenigo.sdk.internal.util.SdkUtils.isNotBlank;
+import static com.plenigo.sdk.internal.util.SdkUtils.toCsv;
+
 
 /**
  * <p>
- * This contains the services related to user managemet with plenigo,
+ * This contains the services related to companies with plenigo,
  * </p>
  * <p>
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
@@ -44,7 +40,7 @@ import java.util.logging.Logger;
  */
 public final class CompanyService {
     private static final Logger LOGGER = Logger.getLogger(CompanyService.class.getName());
-    private static final String EXPECTED_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    private static final String RESPONSE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
 
     /**
@@ -55,135 +51,130 @@ public final class CompanyService {
     }
 
     /**
-     * This method retrieves user data with the provided access token.
+     * Returns an user list based on a page request.
      *
-     * @param accessToken The provided access token.
+     * @param request search criteria
      *
-     * @return the user data related to the access token
+     * @return an element list of company users
      *
-     * @throws PlenigoException whenever an error happens
+     * @throws PlenigoException if any error happens
      */
-    public static ElementList<CompanyUser> getUserList() throws PlenigoException {
+    public static ElementList<CompanyUser> getUserList(PageRequest request) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
-        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS, SdkUtils.buildUrlQueryString(params)
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-        return new ElementList<CompanyUser>(0, 0, null);
+        ValidationUtils.validate(request);
+        params.put(ApiParams.PAGE_SIZE, request.getPageSize());
+        params.put(ApiParams.PAGE_NUMBER, request.getPageNumber());
+        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS, buildUrlQueryString(params),
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        return buildElementListForCompanyUsers(objectMap, request.getPageNumber());
     }
 
-//    /**
-//     * Queries the paywall service to check if its enabled, if disabled all product paywall should be disabled.
-//     *
-//     * @return a boolean, true if its enabled an false otherwise
-//     *
-//     * @throws PlenigoException if any error happens
-//     */
-//    public static boolean isPaywallEnabled() throws PlenigoException {
-//        Map<String, Object> params = new HashMap<String, Object>();
-//        Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.PAYWALL_STATE, SdkUtils.buildUrlQueryString(params)
-//                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-//        Object paywallState = objectMap.get(ApiResults.PAYWALL_STATE);
-//        boolean isEnabled = false;
-//        if (paywallState != null) {
-//            isEnabled = Boolean.valueOf(paywallState.toString());
-//        }
-//        return isEnabled;
-//    }
-//
-//    /**
-//     * Returns a flag indicating if the user is logged in or not.
-//     *
-//     * @param cookieHeader the cookie information
-//     *
-//     * @return an indicator saying if the user is logged in or not
-//     *
-//     * @throws PlenigoException if any parsing error occurs
-//     */
-//    public static boolean isLoggedIn(String cookieHeader) throws PlenigoException {
-//        Customer customer = getCustomerInfo(cookieHeader);
-//        if (customer == null) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    /**
-//     * Returns the products the user has bought with the configured company.
-//     *
-//     * @param cookieHeader the cookie information
-//     *
-//     * @return the amount of products the user has bought
-//     *
-//     * @throws PlenigoException if any error occurs
-//     */
-//    public ProductsBought getProductsBought(String cookieHeader) throws PlenigoException {
-//        List<SinglePaymentProduct> singlePaymentProducts = new LinkedList<SinglePaymentProduct>();
-//        List<SubscriptionProduct> subscriptionProducts = new LinkedList<SubscriptionProduct>();
-//
-//        Customer customer = getCustomerInfo(cookieHeader);
-//        if (customer == null) {
-//            return new ProductsBought(subscriptionProducts, singlePaymentProducts);
-//        }
-//
-//        Map<String, Object> params = new HashMap<String, Object>();
-//        params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode());
-//        Map<String, Object> stringObjectMap = client.get(PlenigoManager.get().getUrl(), String.format(ApiURLs.USER_PRODUCTS, customer.getCustomerId()),
-//                SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-//        fillProductsBoughtObject(stringObjectMap, singlePaymentProducts, subscriptionProducts);
-//        return new ProductsBought(subscriptionProducts, singlePaymentProducts);
-//    }
-//
-//    /**
-//     * Fills the products bought object with the given object map.
-//     *
-//     * @param stringObjectMap           the object map
-//     * @param subscriptionProductsList  the subscrption products list
-//     * @param singlePaymentProductsList the payment products list
-//     */
-//    private void fillProductsBoughtObject(Map<String, Object> stringObjectMap,
-//                                          List<SinglePaymentProduct> singlePaymentProductsList,
-//                                          List<SubscriptionProduct> subscriptionProductsList) {
-//        Object subscriptionsObj = stringObjectMap.get(ApiResults.SUBSCRIPTIONS_LIST);
-//        Object singlePaymentProductObj = stringObjectMap.get(ApiResults.SINGLE_PAYMENT_PRODUCT_LIST);
-//        DateFormat dateFormat = new SimpleDateFormat(EXPECTED_DATE_FORMAT);
-//        if (subscriptionsObj != null && subscriptionsObj instanceof List) {
-//            List<Map<String, String>> subscriptions = (List<Map<String, String>>) subscriptionsObj;
-//            for (Map<String, String> subscription : subscriptions) {
-//                String productId = subscription.get(ApiResults.PROD_ID);
-//                String title = subscription.get(ApiResults.TITLE);
-//                Date buyDate = parseDate(dateFormat, subscription.get(ApiResults.BUY_DATE));
-//                Date endDate = parseDate(dateFormat, subscription.get(ApiResults.END_DATE));
-//                subscriptionProductsList.add(new SubscriptionProduct(productId, title, buyDate, endDate));
-//            }
-//        }
-//
-//        if (singlePaymentProductObj != null && singlePaymentProductObj instanceof List) {
-//            List<Map<String, String>> singlePaymentProducts = (List<Map<String, String>>) singlePaymentProductObj;
-//            for (Map<String, String> subscription : singlePaymentProducts) {
-//                String productId = subscription.get(ApiResults.PROD_ID);
-//                String title = subscription.get(ApiResults.TITLE);
-//                Date buyDate = parseDate(dateFormat, subscription.get(ApiResults.BUY_DATE));
-//                singlePaymentProductsList.add(new SinglePaymentProduct(productId, title, buyDate));
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Parses the given date with the date format, if it can't be parsed it returns null.
-//     *
-//     * @param dateFormat the date format object
-//     * @param dateStr    the date to format
-//     *
-//     * @return the date
-//     */
-//    private Date parseDate(DateFormat dateFormat, String dateStr) {
-//        Date buyDate = null;
-//        if (dateStr != null && !dateStr.isEmpty()) {
-//            try {
-//                buyDate = dateFormat.parse(dateStr);
-//            } catch (ParseException e) {
-//                LOGGER.warning("The buy date could not be parsed, given string= " + dateStr);
-//            }
-//        }
-//        return buyDate;
-//    }
+    /**
+     * Returns an user list based on the provided user list.
+     *
+     * @param userList user list to find
+     *
+     * @return the users found related to the company
+     *
+     * @throws PlenigoException if any error happens
+     */
+    public static List<CompanyUser> getUserList(List<String> userList) throws PlenigoException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(ApiParams.USER_IDS, toCsv(userList));
+        Map<String, Object> objectMap = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.COMPANY_USERS_SELECT,
+                buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Object companyUsersObj = objectMap.get(ApiResults.ELEMENTS);
+        return buildCompanyUserList(companyUsersObj);
+    }
+
+    /**
+     * Builds an element list of company users.
+     *
+     * @param objectMap  the json representation
+     * @param pageNumber the page number to use
+     *
+     * @return an element list
+     */
+    private static ElementList<CompanyUser> buildElementListForCompanyUsers(Map<String, Object> objectMap, int pageNumber) {
+        String totalElementsStr = SdkUtils.getValueIfNotNull(objectMap, ApiResults.TOTAL_ELEMENTS);
+        long totalElements = 0;
+        if (!totalElementsStr.isEmpty()) {
+            totalElements = Long.parseLong(totalElementsStr);
+        }
+        String pageSizeStr = SdkUtils.getValueIfNotNull(objectMap, ApiResults.PAGE_SIZE);
+        int pageSize = 0;
+        if (!pageSizeStr.isEmpty()) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        Object companyUsersObj = objectMap.get(ApiResults.ELEMENTS);
+        List<CompanyUser> companyUsersList = buildCompanyUserList(companyUsersObj);
+        return new ElementList<CompanyUser>(pageNumber, pageSize, totalElements, companyUsersList);
+    }
+
+    /**
+     * Builds a list of company users from the company user json list.
+     *
+     * @param companyUsersObj the json list representation
+     *
+     * @return a list of company users
+     */
+    private static List<CompanyUser> buildCompanyUserList(Object companyUsersObj) {
+        List<CompanyUser> companyUsersList = new LinkedList<CompanyUser>();
+        if (companyUsersObj != null && companyUsersObj instanceof List) {
+            List<Map<String, Object>> companyUsers = (List<Map<String, Object>>) companyUsersObj;
+            for (Map<String, Object> companyUser : companyUsers) {
+                String customerId = getValueIfNotNull(companyUser, ApiResults.CUST_ID);
+                String email = getValueIfNotNull(companyUser, ApiResults.EMAIL);
+                String userName = getValueIfNotNull(companyUser, ApiResults.USERNAME);
+                String language = getValueIfNotNull(companyUser, ApiResults.LANGUAGE);
+                String gender = getValueIfNotNull(companyUser, ApiResults.GENDER);
+                String firstName = getValueIfNotNull(companyUser, ApiResults.FIRST_NAME);
+                String name = getValueIfNotNull(companyUser, ApiResults.LAST_NAME);
+                String mobileNumber = getValueIfNotNull(companyUser, ApiResults.MOBILE_NUMBER);
+                String userState = getValueIfNotNull(companyUser, ApiResults.USER_STATE);
+                String birthdayStr = getValueIfNotNull(companyUser, ApiResults.BIRTHDAY);
+                Date birthday = null;
+                if (isNotBlank(birthdayStr)) {
+                    try {
+                        birthday = new SimpleDateFormat(RESPONSE_DATE_FORMAT).parse(birthdayStr);
+                    } catch (ParseException e) {
+                        LOGGER.log(Level.SEVERE, "Could not parse the following date string: " + birthdayStr, e);
+                    }
+                }
+                String postCode = getValueIfNotNull(companyUser, ApiResults.POST_CODE);
+                String street = getValueIfNotNull(companyUser, ApiResults.STREET);
+                String additionalAddressInfo = getValueIfNotNull(companyUser, ApiResults.ADDITIONAL_ADDRESS_INFO);
+                String city = getValueIfNotNull(companyUser, ApiResults.CITY);
+                String state = getValueIfNotNull(companyUser, ApiResults.STATE);
+                String country = getValueIfNotNull(companyUser, ApiResults.COUNTRY);
+                String agreementState = getValueIfNotNull(companyUser, ApiResults.AGREEMENT_STATE);
+                CompanyUserBillingAddress billingAddress = buildBillingAddressInfo(companyUser);
+                companyUsersList.add(new CompanyUser(customerId, email, userName, language, gender, firstName, name, mobileNumber, userState, birthday,
+                        postCode, street, additionalAddressInfo, city, state, country, agreementState, billingAddress));
+            }
+        }
+        return companyUsersList;
+    }
+
+    /**
+     * Builds a billing address info object from the provided json object representation.
+     *
+     * @param companyUser company user json object representation
+     *
+     * @return a company user billing address object
+     */
+    private static CompanyUserBillingAddress buildBillingAddressInfo(Map<String, Object> companyUser) {
+        String gender = getValueIfNotNull(companyUser, ApiResults.GENDER);
+        String firstName = getValueIfNotNull(companyUser, ApiResults.FIRST_NAME);
+        String name = getValueIfNotNull(companyUser, ApiResults.LAST_NAME);
+        String company = getValueIfNotNull(companyUser, ApiResults.COMPANY);
+        String street = getValueIfNotNull(companyUser, ApiResults.STREET);
+        String additionalAddressInfo = getValueIfNotNull(companyUser, ApiResults.ADDITIONAL_ADDRESS_INFO);
+        String postCode = getValueIfNotNull(companyUser, ApiResults.POST_CODE);
+        String city = getValueIfNotNull(companyUser, ApiResults.CITY);
+        String state = getValueIfNotNull(companyUser, ApiResults.STATE);
+        String country = getValueIfNotNull(companyUser, ApiResults.COUNTRY);
+        String vatNumber = getValueIfNotNull(companyUser, ApiResults.VAT_NUMBER);
+        return new CompanyUserBillingAddress(gender, firstName, name, company, street, additionalAddressInfo, postCode, city, state, country, vatNumber);
+    }
 }
