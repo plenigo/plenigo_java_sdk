@@ -69,7 +69,7 @@ public class UserServiceTest {
 
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
-        Mockito.when(internalUserApiService.hasUserBought(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+        Mockito.when(internalUserApiService.hasUserBought(anyString(), anyString(), anyString(), anyString(),
                 Mockito.anyBoolean(), Mockito.anyList())).thenReturn(true);
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBought("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE));
@@ -96,7 +96,7 @@ public class UserServiceTest {
 
 
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), eq(ApiURLs.PAYWALL_STATE), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), eq(ApiURLs.PAYWALL_STATE), anyString(), Mockito.anyMap()))
                 .thenReturn(Collections.singletonMap("enabled", (Object) "true"));
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         ReflectionTestUtils.setField(instance, "client", client);
@@ -129,7 +129,7 @@ public class UserServiceTest {
         configurePlenigoManager();
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
-        Mockito.when(internalUserApiService.hasUserBought(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+        Mockito.when(internalUserApiService.hasUserBought(anyString(), anyString(), anyString(), anyString(),
                 Mockito.anyBoolean(), Mockito.anyList())).thenThrow(new PlenigoException(ErrorCode.SERVER, "", null));
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBought("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE));
@@ -156,7 +156,7 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(instance, "client", client);
         Map<String, Object> result = new HashMap<String, Object>();
         result.put(ApiResults.PAYWALL_STATE, Boolean.TRUE.toString());
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(result);
         assertTrue(UserService.isPaywallEnabled());
     }
@@ -185,8 +185,8 @@ public class UserServiceTest {
         Mockito.when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));
         PowerMockito.doCallRealMethod().
                 when(client,
-                        method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class))
-                .withArguments(any(HttpURLConnection.class), anyString());
+                        method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class, String.class))
+                .withArguments(any(HttpURLConnection.class), anyString(), anyString());
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         ReflectionTestUtils.setField(instance, "client", client);
         ProductsBought productsBought = instance.getProductsBought(PLENIGO_USER_SAMPLE_COOKIE);
@@ -219,8 +219,8 @@ public class UserServiceTest {
         Mockito.when(connection.getInputStream()).thenReturn(new ByteArrayInputStream(invalidParamsJson.getBytes()));
         PowerMockito.doCallRealMethod().
                 when(client,
-                        method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class))
-                .withArguments(any(HttpURLConnection.class), anyString());
+                        method(RestClient.class, "handleResponse", HttpURLConnection.class, String.class, String.class))
+                .withArguments(any(HttpURLConnection.class), anyString(), anyString());
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         ReflectionTestUtils.setField(instance, "client", client);
         ProductsBought productsBought = instance.getProductsBought(PLENIGO_USER_SAMPLE_COOKIE);
@@ -254,7 +254,7 @@ public class UserServiceTest {
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
         Address addressInfo = new Address("Calle", "Adicional", "00000", "Sto Dgo", "Dom Rep");
         UserData userData = new UserData("id", "email@sample.com", "MALE", "Torres", "Ricardo", addressInfo, "ricardo");
-        Mockito.when(internalUserApiService.getUserData(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(internalUserApiService.getUserData(anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(userData);
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertEquals("User data is different", userData, UserService.getUserData("123"));
@@ -268,7 +268,7 @@ public class UserServiceTest {
         PowerMockito.when(mockSingleton.decryptWithAES(anyString(), anyString())).thenReturn("ci=>1234&ts=>" + System.currentTimeMillis());
 
 
-     mockPlenigoManager();
+        mockPlenigoManager();
 
         suppressConstructor(HashUtils.class);
         mockStatic(HashUtils.class);

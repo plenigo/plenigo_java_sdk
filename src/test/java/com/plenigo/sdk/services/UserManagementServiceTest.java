@@ -17,11 +17,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
@@ -56,7 +56,7 @@ public class UserManagementServiceTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(ApiResults.CUST_ID, "customerId");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         String customerId = UserManagementService.registerUser("email@email.com", "en");
@@ -66,16 +66,17 @@ public class UserManagementServiceTest {
     @Test
     public void testSuccessfulChangeEmail() throws Exception {
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.put(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.put(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(new HashMap<String, Object>());
         HttpConfig.get().setClient(client);
         boolean wasEmailChanged = UserManagementService.changeEmail("customerId", "email@email.com");
         assertTrue(wasEmailChanged);
     }
+
     @Test
     public void testSuccessfulLoginToken() throws Exception {
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(new HashMap<String, Object>());
         HttpConfig.get().setClient(client);
         String appTokenData = UserManagementService.createLoginToken("customerId");
