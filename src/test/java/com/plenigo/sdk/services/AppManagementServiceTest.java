@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
 
@@ -63,7 +64,7 @@ public class AppManagementServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.APP_TOKEN, "appToken");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         AppAccessToken appAccessToken = AppManagementService.requestAppToken(new AppTokenRequest("XBH05SNGJY8F", "2jmZXbt9229990636341", "test"));
@@ -73,7 +74,7 @@ public class AppManagementServiceTest {
     @Test
     public void testSuccessfulGetCustomerApps() throws Exception {
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(new HashMap<String, Object>());
         HttpConfig.get().setClient(client);
         List<AppAccessData> appTokenData = AppManagementService.getCustomerApps(new CustomerAppRequest("XBH05SNGJY8F"));
@@ -87,7 +88,7 @@ public class AppManagementServiceTest {
         map.put(ApiResults.CUST_ID, "customerId");
         map.put(ApiResults.APP_TOKEN, "appToken");
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         AppTokenRequest tokenRequest = new AppTokenRequest("XBH05SNGJY8F", "2jmZXbt9229990636341", "test");
@@ -99,7 +100,7 @@ public class AppManagementServiceTest {
         apiDataMap.put(ApiResults.DESCRIPTION, "description");
         apiDataMap.put(ApiResults.PROD_ID, "productId");
 
-        Mockito.when(client.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyMap()))
+        Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(apiDataMap);
         AppAccessData appAccessData = AppManagementService.requestAppId(appAccessToken);
         assertNotNull(appAccessData);
@@ -110,7 +111,7 @@ public class AppManagementServiceTest {
     public void testSuccessfulDelete() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.delete(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.delete(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         AppManagementService.deleteCustomerApp(new DeleteAppIdRequest("customerId", "customerAppid"));
@@ -120,7 +121,7 @@ public class AppManagementServiceTest {
     public void testSuccessfulHasUserBought() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         RestClient client = Mockito.mock(RestClient.class);
-        Mockito.when(client.get(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
+        Mockito.when(client.get(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
         Boolean hasUserBought = AppManagementService.hasUserBought(new ProductAccessRequest("customerId", "productId", "customerAppId"));

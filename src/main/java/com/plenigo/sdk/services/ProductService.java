@@ -61,10 +61,10 @@ public final class ProductService {
      * @throws PlenigoException whenever an error happens
      */
     public static ProductData getProductData(String productId) throws PlenigoException {
-        LOGGER.log(Level.FINEST, "Getting the product data for the product id: {0} using the following company id: {1}",
-                new Object[]{productId, PlenigoManager.get().getCompanyId()});
-        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT + "/" + productId, null,
-                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        LOGGER.log(Level.FINEST, "Getting the product data for the product id: {0} using the following company id: {1}"
+                , new Object[]{productId, PlenigoManager.get().getCompanyId()});
+        Map<String, Object> response = client.get(PlenigoManager.get().getUrl(), ApiURLs.GET_PRODUCT, ApiURLs.GET_PRODUCT + "/" + productId, null
+                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         LOGGER.log(Level.FINEST, "JSON Data response from product id {0} : {1}", new Object[]{productId, response});
         ProductData productData = buildProductData(response);
         LOGGER.log(Level.FINEST, "Built Product Data from product id {0} : {1}", new Object[]{productId, productData});
