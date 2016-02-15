@@ -53,8 +53,8 @@ public final class AppManagementService {
         body.put(ApiParams.PRODUCT_ID, request.getProductId());
         body.put(ApiParams.DESCRIPTION, request.getDescription());
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.ACCESS_APP_TOKEN,
-                String.format(ApiURLs.ACCESS_APP_TOKEN , request.getCustomerId()), null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
-                        , PlenigoManager.get().getSecret()));
+                String.format(ApiURLs.ACCESS_APP_TOKEN, request.getCustomerId()), null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                        PlenigoManager.get().getSecret()));
         return buildAppAccessToken(response);
     }
 
@@ -85,8 +85,8 @@ public final class AppManagementService {
         params.put(ApiParams.CUSTOMER_ID, request.getCustomerId());
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         Map<String, Object> response = HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.ACCESS_APP_CUSTOMER,
-                String.format(ApiURLs.ACCESS_APP_CUSTOMER , request.getCustomerId()), SdkUtils.buildUrlQueryString(params)
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                String.format(ApiURLs.ACCESS_APP_CUSTOMER, request.getCustomerId()), SdkUtils.buildUrlQueryString(params),
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildAppAccessList(response);
     }
 
@@ -104,8 +104,8 @@ public final class AppManagementService {
         body.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         body.put(ApiParams.APP_ACCESS_TOKEN, request.getToken());
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.ACCESS_APP_CUSTOMER,
-                String.format(ApiURLs.ACCESS_APP_CUSTOMER , request.getCustomerId()), null, body
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+                String.format(ApiURLs.ACCESS_APP_CUSTOMER, request.getCustomerId()), null, body,
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildAppIdData(response);
     }
 
@@ -123,9 +123,10 @@ public final class AppManagementService {
         boolean hasAccess = true;
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         try {
-            HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.VERIFY_CUSTOMER_APP_PRODUCT
-                    , String.format(ApiURLs.VERIFY_CUSTOMER_APP_PRODUCT , request.getCustomerId(), request.getProductId(), request.getCustomerAppId())
-                    , SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+            HttpConfig.get().getClient().get(PlenigoManager.get().getUrl(), ApiURLs.VERIFY_CUSTOMER_APP_PRODUCT,
+                    String.format(ApiURLs.VERIFY_CUSTOMER_APP_PRODUCT, request.getCustomerId(), request.getProductId(),
+                            request.getCustomerAppId()), SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                            PlenigoManager.get().getSecret()));
         } catch (PlenigoException pe) {
             //Forbidden means that the user has not bought the product.
             if (ErrorCode.get(pe.getResponseCode()) == ErrorCode.CANNOT_ACCESS_PRODUCT
@@ -149,9 +150,9 @@ public final class AppManagementService {
         Map<String, Object> params = new LinkedHashMap<String, Object>();
         params.put(ApiParams.TEST_MODE, PlenigoManager.get().isTestMode().toString());
         try {
-            HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), ApiURLs.DELETE_CUSTOMER_APP, String.format(ApiURLs.DELETE_CUSTOMER_APP
-                    , request.getCustomerId(), request.getCustomerAppId()), SdkUtils.buildUrlQueryString(params)
-                    , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+            HttpConfig.get().getClient().delete(PlenigoManager.get().getUrl(), ApiURLs.DELETE_CUSTOMER_APP, String.format(ApiURLs.DELETE_CUSTOMER_APP,
+                    request.getCustomerId(), request.getCustomerAppId()), SdkUtils.buildUrlQueryString(params),
+                    JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         } catch (PlenigoException pe) {
             if (!(pe.getResponseCode().equals(String.valueOf(HttpURLConnection.HTTP_NO_CONTENT))
                     || ErrorCode.get(pe.getResponseCode()) == ErrorCode.APP_ID_DELETED)) {

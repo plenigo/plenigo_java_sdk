@@ -48,8 +48,8 @@ public final class UserManagementService {
         }
         body.put(ApiParams.LANGUAGE, language);
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.REGISTER_EXTERNAL_USER_URL,
-                ApiURLs.REGISTER_EXTERNAL_USER_URL , null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId()
-                        , PlenigoManager.get().getSecret()));
+                ApiURLs.REGISTER_EXTERNAL_USER_URL, null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
+                        PlenigoManager.get().getSecret()));
         return SdkUtils.getValueIfNotNull(response, ApiResults.CUST_ID);
     }
 
@@ -66,9 +66,9 @@ public final class UserManagementService {
     public static boolean changeEmail(String customerId, String email) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
         body.put(ApiParams.EMAIL, email);
-        HttpConfig.get().getClient().put(PlenigoManager.get().getUrl(), ApiURLs.EXTERNAL_USER_EMAIL_CHANGE_URL
-                , String.format(ApiURLs.EXTERNAL_USER_EMAIL_CHANGE_URL, customerId) , null, body
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        HttpConfig.get().getClient().put(PlenigoManager.get().getUrl(), ApiURLs.EXTERNAL_USER_EMAIL_CHANGE_URL,
+                String.format(ApiURLs.EXTERNAL_USER_EMAIL_CHANGE_URL, customerId), null, body,
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return true;
     }
 
@@ -82,9 +82,9 @@ public final class UserManagementService {
      * @throws PlenigoException if any error occurs
      */
     public static String createLoginToken(String customerId) throws PlenigoException {
-        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.EXTERNAL_USER_CREATE_LOGIN_TOKEN_URL
-                , String.format(ApiURLs.EXTERNAL_USER_CREATE_LOGIN_TOKEN_URL, customerId) , null, null
-                , JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
+        Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.EXTERNAL_USER_CREATE_LOGIN_TOKEN_URL,
+                String.format(ApiURLs.EXTERNAL_USER_CREATE_LOGIN_TOKEN_URL, customerId), null, null,
+                JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return SdkUtils.getValueIfNotNull(response, ApiResults.LOGIN_TOKEN);
     }
 }
