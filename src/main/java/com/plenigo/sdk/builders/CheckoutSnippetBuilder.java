@@ -305,7 +305,15 @@ public class CheckoutSnippetBuilder {
         return this;
     }
 
-
+    /**
+     * Adds a product id replacement to the checkout process.
+     *
+     * @param productIdReplacement product id replacement
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the product replacement id is too long
+     */
     public CheckoutSnippetBuilder withProductIdReplacement(String productIdReplacement) throws PlenigoException {
         if (SdkUtils.isBlank(productIdReplacement) || productIdReplacement.length() > PROD_ID_MAX_LENGTH) {
             throw new PlenigoException(ErrorCode.PROD_ID_REPL_TOO_LONG);
@@ -314,6 +322,13 @@ public class CheckoutSnippetBuilder {
         return this;
     }
 
+    /**
+     * Adds a segment id to the checkout process.
+     *
+     * @param segmentId segment id
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     */
     public CheckoutSnippetBuilder withSegmentId(String segmentId) {
         this.segmentId = segmentId;
         return this;

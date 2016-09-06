@@ -122,8 +122,8 @@ public final class MeterService {
         if (userMeteredDataCookie.getValue() == null || userMeteredDataCookie.getValue().trim().isEmpty()) {
             return null;
         }
-        String data = EncryptionUtils.get().decryptWithAES(PlenigoManager.get().getCompanyId() //companyhash
-                , userMeteredDataCookie.getValue(), //cookie
+        String data = EncryptionUtils.get().decryptWithAES(PlenigoManager.get().getCompanyId(),
+                userMeteredDataCookie.getValue(), //cookie
                 METERED_INIT_VECTOR); //init vector
         LOGGER.log(Level.FINEST, "Resulting data from decryption of meter cookie: {0}", data);
         String[] userData = data.split("\\|");

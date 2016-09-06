@@ -43,7 +43,7 @@ public enum SnippetType {
     }
 
     /**
-     * Returns the snippet type
+     * Returns the snippet type.
      *
      * @return snippet type
      */

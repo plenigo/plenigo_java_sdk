@@ -182,7 +182,8 @@ public final class CompanyService {
                 String state = getValueIfNotNull(billingAddress, ApiResults.STATE);
                 String country = getValueIfNotNull(billingAddress, ApiResults.COUNTRY);
                 String vatNumber = getValueIfNotNull(billingAddress, ApiResults.VAT_NUMBER);
-                return new CompanyUserBillingAddress(gender, firstName, name, company, street, additionalAddressInfo, postCode, city, state, country, vatNumber);
+                return new CompanyUserBillingAddress(gender, firstName, name, company, street, additionalAddressInfo, postCode, city, state, country,
+                        vatNumber);
             }
         }
         return null;

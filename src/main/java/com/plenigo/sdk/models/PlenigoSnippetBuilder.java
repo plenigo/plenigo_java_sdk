@@ -8,7 +8,7 @@ import java.util.UUID;
 
 /**
  * <p>
- * Builder for javascript plenigo snippets.
+ * Builder for plenigo snippets.
  * </p>
  * <p>
  * <strong>Thread safety:</strong> This class is thread safe and can be injected.
@@ -18,11 +18,22 @@ public class PlenigoSnippetBuilder {
     private static final String PLENIGO_LOGIN_URL = "https://www.plenigo.com/login";
     private SnippetConfig snippetConfig;
 
-
+    /**
+     * Builds a plenigo snippet builder with the provided configuration.
+     *
+     * @param snippetConfig configuration
+     */
     public PlenigoSnippetBuilder(SnippetConfig snippetConfig) {
         this.snippetConfig = snippetConfig;
     }
 
+    /**
+     * Builds the code snippet with the provided configuration.
+     *
+     * @return snippet
+     *
+     * @throws PlenigoException if there are any errors during the build
+     */
     public String build() throws PlenigoException {
         SnippetConfig config = snippetConfig;
         if (config == null) {
@@ -35,7 +46,7 @@ public class PlenigoSnippetBuilder {
         String loginToken = config.getLoginToken();
         if (elementId == null) {
             elementId = "plenigoSnippet" + HashUtils.calculateHash(UUID.randomUUID().toString()).substring(3, 7);
-            snippet = String.format("<div id=\"" + elementId + "\"></div>\n");
+            snippet = "<div id=\"" + elementId + "\"></div>\n";
         }
 
         if (type == null) {
