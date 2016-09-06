@@ -26,9 +26,6 @@ public class Transaction {
     private PaymentMethod paymentMethod;
     private Date transactionDate;
     private TransactionStatus status;
-    private double shippingCosts;
-    private double shippingCostsTaxesPercentage;
-    private double shippingCostsTaxesAmount;
     private long billingId;
     private String cancellationTransactionId;
     private String cancelledTransactionId;
@@ -48,17 +45,13 @@ public class Transaction {
      * @param paymentMethod                payment method
      * @param transactionDate              transaction date
      * @param status                       transaction status
-     * @param shippingCosts                shipping costs
-     * @param shippingCostsTaxesPercentage shipping costs taxes percentage
-     * @param shippingCostsTaxesAmount     shipping costs taxes amount
      * @param billingId                    billing id
      * @param cancellationTransactionId    cancellation transaction id
      * @param cancelledTransactionId       cancelled transaction id
      */
     public Transaction(String transactionId, String customerId, String productId, String title, double price, double taxesPercentage, double taxesAmount,
-                       String taxesCountry, String currency, PaymentMethod paymentMethod, Date transactionDate, TransactionStatus status, double shippingCosts,
-                       double shippingCostsTaxesPercentage, double shippingCostsTaxesAmount, long billingId, String cancellationTransactionId,
-                       String cancelledTransactionId) {
+                       String taxesCountry, String currency, PaymentMethod paymentMethod, Date transactionDate, TransactionStatus status, long billingId,
+                       String cancellationTransactionId, String cancelledTransactionId) {
         this.transactionId = transactionId;
         this.customerId = customerId;
         this.productId = productId;
@@ -71,9 +64,6 @@ public class Transaction {
         this.paymentMethod = paymentMethod;
         this.transactionDate = DateUtils.copy(transactionDate);
         this.status = status;
-        this.shippingCosts = shippingCosts;
-        this.shippingCostsTaxesPercentage = shippingCostsTaxesPercentage;
-        this.shippingCostsTaxesAmount = shippingCostsTaxesAmount;
         this.billingId = billingId;
         this.cancellationTransactionId = cancellationTransactionId;
         this.cancelledTransactionId = cancelledTransactionId;
@@ -185,33 +175,6 @@ public class Transaction {
      */
     public TransactionStatus getStatus() {
         return status;
-    }
-
-    /**
-     * Returns the shipping costs.
-     *
-     * @return shipping costs
-     */
-    public double getShippingCosts() {
-        return shippingCosts;
-    }
-
-    /**
-     * Returns the shipping costs taxes percentage.
-     *
-     * @return shipping costs taxes percentage
-     */
-    public double getShippingCostsTaxesPercentage() {
-        return shippingCostsTaxesPercentage;
-    }
-
-    /**
-     * Returns the shipping costs taxes amount.
-     *
-     * @return shipping costs taxes amount
-     */
-    public double getShippingCostsTaxesAmount() {
-        return shippingCostsTaxesAmount;
     }
 
     /**

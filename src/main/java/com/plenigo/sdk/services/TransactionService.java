@@ -149,22 +149,6 @@ public final class TransactionService {
                 }
                 String transactionStatusStr = getValueIfNotNull(companyUser, ApiResults.TRANSACTION_STATUS);
                 TransactionStatus status = TransactionStatus.get(transactionStatusStr);
-                String shippingCostsStr = getValueIfNotNull(companyUser, ApiResults.SHIPPING_COSTS);
-                double shippingCosts = 0.0;
-                if (isNotBlank(shippingCostsStr)) {
-                    shippingCosts = Double.parseDouble(shippingCostsStr);
-                }
-                String shippingCostsTaxesPercentageStr = getValueIfNotNull(companyUser, ApiResults.SHIPPING_COSTS_TAXES_PERCENTAGE);
-                double shippingCostsTaxesPercentage = 0.0;
-                if (isNotBlank(shippingCostsTaxesPercentageStr)) {
-                    shippingCostsTaxesPercentage = Double.parseDouble(shippingCostsTaxesPercentageStr);
-                }
-
-                String shippingCostsTaxesAmountStr = getValueIfNotNull(companyUser, ApiResults.SHIPPING_COSTS_TAXES_AMOUNT);
-                double shippingCostsTaxesAmount = 0.0;
-                if (isNotBlank(shippingCostsTaxesAmountStr)) {
-                    shippingCostsTaxesAmount = Double.parseDouble(shippingCostsTaxesAmountStr);
-                }
 
 
                 String billingIdStr = getValueIfNotNull(companyUser, ApiResults.BILLING_ID);
@@ -175,8 +159,7 @@ public final class TransactionService {
                 String cancellationTransactionId = getValueIfNotNull(companyUser, ApiResults.CANCELLATION_TRANSACTION_ID);
                 String cancelledTransactionId = getValueIfNotNull(companyUser, ApiResults.CANCELLED_TRANSACTION_ID);
                 transactionList.add(new Transaction(transactionId, customerId, productId, title, price, taxesPercentage, taxesAmount, taxesCountry, currency,
-                        paymentMethod, transactionDate, status, shippingCosts, shippingCostsTaxesPercentage, shippingCostsTaxesAmount, billingId,
-                        cancellationTransactionId, cancelledTransactionId));
+                        paymentMethod, transactionDate, status, billingId, cancellationTransactionId, cancelledTransactionId));
             }
         }
         return transactionList;

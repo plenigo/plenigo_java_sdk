@@ -55,6 +55,16 @@ public class PlenigoException extends Exception {
         this.errorDetails = errorDetails;
     }
 
+    /**
+     * Builds an exception with the provided error code.
+     *
+     * @param errorCode error code
+     */
+    public PlenigoException(ErrorCode errorCode) {
+        super(errorCode.getMsg());
+        this.responseCode = errorCode.getCode();
+    }
+
 
     /**
      * The resulting Response Code of a plenigo API Request.

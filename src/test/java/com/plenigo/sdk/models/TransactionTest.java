@@ -25,9 +25,6 @@ public class TransactionTest {
     public static final PaymentMethod PAYMENT_METHOD = PaymentMethod.BANK_ACCOUNT;
     public static final Date TRANSACTION_DATE = new Date();
     public static final TransactionStatus TRANSACTION_STATUS = TransactionStatus.BOOKED;
-    public static final double SHIPPING_COSTS = 2.00;
-    public static final double SHIPPING_COSTS_TAXES_PERCENTAGE = 3.00;
-    public static final double SHIPPING_COSTS_TAXES_AMOUNT = 4.00;
     public static final long BILLING_ID = 123L;
     public static final String CANCELLATION_TRANSACTION_ID = "1235D";
     public static final String CANCELLED_TRANSACTION_ID = "12354A";
@@ -36,8 +33,7 @@ public class TransactionTest {
     @Before
     public void setup() {
         transaction = new Transaction(TRANSACTION_ID, CUSTOMER_ID, PRODUCT_ID, TITLE, PRICE, TAXES_PERCENTAGE, TAXES_AMOUNT, TAXES_COUNTRY,
-                CURRENCY, PAYMENT_METHOD, TRANSACTION_DATE, TRANSACTION_STATUS, SHIPPING_COSTS, SHIPPING_COSTS_TAXES_PERCENTAGE, SHIPPING_COSTS_TAXES_AMOUNT,
-                BILLING_ID, CANCELLATION_TRANSACTION_ID, CANCELLED_TRANSACTION_ID);
+                CURRENCY, PAYMENT_METHOD, TRANSACTION_DATE, TRANSACTION_STATUS, BILLING_ID, CANCELLATION_TRANSACTION_ID, CANCELLED_TRANSACTION_ID);
     }
 
     @Test
@@ -100,22 +96,6 @@ public class TransactionTest {
     public void testGetTransactionStatus() {
         assertEquals("Transaction status is not equals", TRANSACTION_STATUS, transaction.getStatus());
     }
-
-    @Test
-    public void testGetShippingCosts() {
-        assertEquals("Shipping costs are not equal", SHIPPING_COSTS, transaction.getShippingCosts(), 0.0);
-    }
-
-    @Test
-    public void testGetShippingCostsTaxesPercentage() {
-        assertEquals("Shipping costs taxes percentage are not equal", SHIPPING_COSTS_TAXES_PERCENTAGE, transaction.getShippingCostsTaxesPercentage(), 0.0);
-    }
-
-    @Test
-    public void testGetShippingCostsTaxesAmount() {
-        assertEquals("Shipping costs taxes amount is not equal", SHIPPING_COSTS_TAXES_AMOUNT, transaction.getShippingCostsTaxesAmount(), 0.0);
-    }
-
 
     @Test
     public void testGetBillingid() {

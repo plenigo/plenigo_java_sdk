@@ -216,7 +216,7 @@ public class ProductServiceTest {
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
-        PagedList<ProductInfo> productList = ProductService.getProductList(3, null);
+        PagedList<ProductInfo> productList = ProductService.getProductList(3, 0);
         assertNotNull(productList);
         assertEquals(productList.getTotalElements(), totalElements);
         assertEquals(productList.getPageSize(), pageSize);
@@ -247,7 +247,7 @@ public class ProductServiceTest {
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
-        PagedList<ProductInfo> productList = ProductService.getProductList(3, "lastId");
+        PagedList<ProductInfo> productList = ProductService.getProductList(3, 0);
         assertNotNull(productList);
         assertEquals(productList.getTotalElements(), totalElements);
         assertEquals(productList.getPageSize(), pageSize);
@@ -278,7 +278,7 @@ public class ProductServiceTest {
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
-        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, null);
+        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, 0);
         assertNotNull(categoryList);
         assertEquals(categoryList.getTotalElements(), totalElements);
         assertEquals(categoryList.getPageSize(), pageSize);
@@ -309,7 +309,7 @@ public class ProductServiceTest {
                 .thenReturn(map);
         ProductService instance = Whitebox.invokeConstructor(ProductService.class);
         ReflectionTestUtils.setField(instance, "client", client);
-        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, "lastId");
+        PagedList<CategoryInfo> categoryList = ProductService.getCategoryList(3, 0);
         assertNotNull(categoryList);
         assertEquals(categoryList.getTotalElements(), totalElements);
         assertEquals(categoryList.getPageSize(), pageSize);

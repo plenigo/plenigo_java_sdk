@@ -75,18 +75,19 @@ public final class ProductService {
      * Obtain a list of product in a paginated way.
      *
      * @param pageSize The size of the page, it will be trimmed to 10...100
-     * @param lastId   the last id of the page that will set the page number to be requested
+     * @param page     0 based page number
      *
      * @return A list as a ResultSet with totalElements, page size, last id and the list of products
      *
      * @throws PlenigoException If any error happens
      */
-    public static PagedList<ProductInfo> getProductList(int pageSize, String lastId) throws PlenigoException {
+    public static PagedList<ProductInfo> getProductList(int pageSize, int page) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(ApiParams.PAGE_SIZE, pageSize);
-        if (lastId != null && !lastId.trim().isEmpty()) {
-            params.put(ApiParams.LAST_ID, lastId);
+        if (page < 0) {
+            page = 0;
         }
+        params.put(ApiParams.PAGE_NUMBER, page);
         Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_PRODUCTS, ApiURLs.LIST_PRODUCTS,
                 SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
         return buildProductList(objectMap);
@@ -96,21 +97,21 @@ public final class ProductService {
      * Obtain a list of product in a paginated way.
      *
      * @param pageSize The size of the page, it will be trimmed to 10...100
-     * @param lastId   the last id of the page that will set the page number to be requested
+     * @param page     0 based page number
      *
      * @return A list as a ResultSet with totalElements, page size, last id and the list of products
      *
      * @throws PlenigoException If any error happens
      */
-    public static PagedList<CategoryInfo> getCategoryList(int pageSize, String lastId) throws PlenigoException {
+    public static PagedList<CategoryInfo> getCategoryList(int pageSize, int page) throws PlenigoException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(ApiParams.PAGE_SIZE, pageSize);
-        if (lastId != null && !lastId.trim().isEmpty()) {
-            params.put(ApiParams.LAST_ID, lastId);
+        if (page < 0) {
+            page = 0;
         }
+        params.put(ApiParams.PAGE_NUMBER, page);
         Map<String, Object> objectMap = client.get(PlenigoManager.get().getUrl(), ApiURLs.LIST_CATEGORIES, ApiURLs.LIST_CATEGORIES,
                 SdkUtils.buildUrlQueryString(params), JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(), PlenigoManager.get().getSecret()));
-
         return buildCategoryList(objectMap);
     }
 
