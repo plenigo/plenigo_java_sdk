@@ -33,20 +33,22 @@ public final class UserManagementService {
     /**
      * Registers a new user bound to the company that registers the user. This functionality is only available for companies with closed user groups.
      *
-     * @param email    email address of the user to register
-     * @param language Language of the user as two digit ISO code(e.g. en), if left null, en(english) will be used.
+     * @param email          email address of the user to register
+     * @param language       Language of the user as two digit ISO code(e.g. en), if left null, en(english) will be used.
+     * @param externalUserId external user id
      *
      * @return customer id
      *
      * @throws PlenigoException if any error occurs
      */
-    public static String registerUser(String email, String language) throws PlenigoException {
+    public static String registerUser(String email, String language, long externalUserId) throws PlenigoException {
         Map<String, String> body = new LinkedHashMap<String, String>();
         body.put(ApiParams.EMAIL, email);
         if (language == null) {
             language = "en";
         }
         body.put(ApiParams.LANGUAGE, language);
+        body.put("externalUserId", String.valueOf(externalUserId));
         Map<String, Object> response = HttpConfig.get().getClient().post(PlenigoManager.get().getUrl(), ApiURLs.REGISTER_EXTERNAL_USER_URL,
                 ApiURLs.REGISTER_EXTERNAL_USER_URL, null, body, JWT.generateJWTTokenHeader(PlenigoManager.get().getCompanyId(),
                         PlenigoManager.get().getSecret()));
