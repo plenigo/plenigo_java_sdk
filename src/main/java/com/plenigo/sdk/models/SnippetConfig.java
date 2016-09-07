@@ -1,6 +1,5 @@
 package com.plenigo.sdk.models;
 
-
 /**
  * <p>
  * This object represents the snippet config data.

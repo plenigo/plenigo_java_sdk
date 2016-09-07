@@ -5,7 +5,6 @@ import com.plenigo.sdk.internal.util.HashUtils;
 
 import java.util.UUID;
 
-
 /**
  * <p>
  * Builder for plenigo snippets.
@@ -15,7 +14,6 @@ import java.util.UUID;
  * </p>
  */
 public class PlenigoSnippetBuilder {
-    private static final String PLENIGO_LOGIN_URL = "https://www.plenigo.com/login";
     private SnippetConfig snippetConfig;
 
     /**
@@ -51,10 +49,6 @@ public class PlenigoSnippetBuilder {
 
         if (type == null) {
             type = SnippetType.PERSONAL_DATA;
-        }
-
-        if (loggedOutRedUrl == null) {
-            loggedOutRedUrl = PLENIGO_LOGIN_URL;
         }
 
         String loginAddon = "";

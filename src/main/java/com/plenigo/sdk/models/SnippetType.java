@@ -1,6 +1,5 @@
 package com.plenigo.sdk.models;
 
-
 /**
  * Snippet type for js snippets.
  */
