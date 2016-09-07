@@ -25,7 +25,7 @@ public enum ProductType {
      *
      * @param isShippingAllowed if the shipping is allowed
      */
-    private ProductType(boolean isShippingAllowed) {
+    ProductType(boolean isShippingAllowed) {
         this.isShippingAllowed = isShippingAllowed;
     }
 

@@ -30,6 +30,8 @@ public class CheckoutSnippetBuilder {
     private static final Logger LOGGER = Logger.getLogger(CheckoutSnippetBuilder.class.getName());
 
     public static final String DECIMAL_FORMAT = "%.2f";
+
+    public static final int PROD_ID_MAX_LENGTH = 20;
     /**
      * The Product object used to build the link.
      */
@@ -76,6 +78,8 @@ public class CheckoutSnippetBuilder {
      * Login token.
      */
     private String loginToken;
+    private String productIdReplacement;
+    private String segmentId;
 
     /**
      * The checkout event template, this can be interpreted as a javascript
@@ -177,6 +181,8 @@ public class CheckoutSnippetBuilder {
             SdkUtils.addIfNotNull(map, ApiParams.SUBSCRIPTION_RENEWAL, product.getSubscriptionRenewal());
             SdkUtils.addIfNotNull(map, ApiParams.SHIPPING_COST, shippingCost);
             SdkUtils.addIfNotNull(map, ApiParams.OVERRIDE_MODE, overrideMode);
+            SdkUtils.addIfNotNull(map, ApiParams.PRODUCT_ID_REPLACEMENT, productIdReplacement);
+            SdkUtils.addIfNotNull(map, ApiParams.SEGMENT_ID, segmentId);
             if (csrfToken != null) {
                 LOGGER.log(Level.FINEST, "The used CSRF Token: {0}", csrfToken);
                 map.put(ApiParams.CSRF_TOKEN, csrfToken);
@@ -299,10 +305,40 @@ public class CheckoutSnippetBuilder {
         return this;
     }
 
+    /**
+     * Adds a product id replacement to the checkout process.
+     *
+     * @param productIdReplacement product id replacement
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the product replacement id is too long
+     */
+    public CheckoutSnippetBuilder withProductIdReplacement(String productIdReplacement) throws PlenigoException {
+        if (SdkUtils.isBlank(productIdReplacement) || productIdReplacement.length() > PROD_ID_MAX_LENGTH) {
+            throw new PlenigoException(ErrorCode.PROD_ID_REPL_TOO_LONG);
+        }
+        this.productIdReplacement = productIdReplacement;
+        return this;
+    }
+
+    /**
+     * Adds a segment id to the checkout process.
+     *
+     * @param segmentId segment id
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     */
+    public CheckoutSnippetBuilder withSegmentId(String segmentId) {
+        this.segmentId = segmentId;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation + ", paymentConfirmation="
-                + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\'' + ", failedPayments=" + failedPayments
-                + ", shippingCost=" + shippingCost + '}';
+        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation
+                + ", paymentConfirmation=" + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\''
+                + ", failedPayments=" + failedPayments + ", shippingCost=" + shippingCost + ", overrideMode=" + overrideMode
+                + ", loginToken='" + loginToken + '\'' + ", productIdReplacement='" + productIdReplacement + '\'' + ", segmentId='" + segmentId + '\'' + '}';
     }
 }

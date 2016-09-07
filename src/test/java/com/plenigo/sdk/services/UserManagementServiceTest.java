@@ -59,7 +59,7 @@ public class UserManagementServiceTest {
         Mockito.when(client.post(anyString(), anyString(), anyString(), anyString(), Mockito.anyMap(), Mockito.anyMap()))
                 .thenReturn(map);
         HttpConfig.get().setClient(client);
-        String customerId = UserManagementService.registerUser("email@email.com", "en");
+        String customerId = UserManagementService.registerUser("email@email.com", "en", 0);
         assertNotNull(customerId);
     }
 

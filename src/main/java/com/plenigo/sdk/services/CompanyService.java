@@ -166,17 +166,26 @@ public final class CompanyService {
      * @return a company user billing address object
      */
     private static CompanyUserBillingAddress buildBillingAddressInfo(Map<String, Object> companyUser) {
-        String gender = getValueIfNotNull(companyUser, ApiResults.GENDER);
-        String firstName = getValueIfNotNull(companyUser, ApiResults.FIRST_NAME);
-        String name = getValueIfNotNull(companyUser, ApiResults.LAST_NAME);
-        String company = getValueIfNotNull(companyUser, ApiResults.COMPANY);
-        String street = getValueIfNotNull(companyUser, ApiResults.STREET);
-        String additionalAddressInfo = getValueIfNotNull(companyUser, ApiResults.ADDITIONAL_ADDRESS_INFO);
-        String postCode = getValueIfNotNull(companyUser, ApiResults.POST_CODE);
-        String city = getValueIfNotNull(companyUser, ApiResults.CITY);
-        String state = getValueIfNotNull(companyUser, ApiResults.STATE);
-        String country = getValueIfNotNull(companyUser, ApiResults.COUNTRY);
-        String vatNumber = getValueIfNotNull(companyUser, ApiResults.VAT_NUMBER);
-        return new CompanyUserBillingAddress(gender, firstName, name, company, street, additionalAddressInfo, postCode, city, state, country, vatNumber);
+        Object billingAddresses = companyUser.get("billingAddresses");
+        if (billingAddresses != null && billingAddresses instanceof List) {
+            List<Map<String, Object>> billingAddresssesList = (List<Map<String, Object>>) billingAddresses;
+            if (!billingAddresssesList.isEmpty()) {
+                Map<String, Object> billingAddress = billingAddresssesList.get(0);
+                String gender = getValueIfNotNull(billingAddress, ApiResults.GENDER);
+                String firstName = getValueIfNotNull(billingAddress, ApiResults.FIRST_NAME);
+                String name = getValueIfNotNull(billingAddress, ApiResults.LAST_NAME);
+                String company = getValueIfNotNull(billingAddress, ApiResults.COMPANY);
+                String street = getValueIfNotNull(billingAddress, ApiResults.STREET);
+                String additionalAddressInfo = getValueIfNotNull(billingAddress, ApiResults.ADDITIONAL_ADDRESS_INFO);
+                String postCode = getValueIfNotNull(billingAddress, ApiResults.POST_CODE);
+                String city = getValueIfNotNull(billingAddress, ApiResults.CITY);
+                String state = getValueIfNotNull(billingAddress, ApiResults.STATE);
+                String country = getValueIfNotNull(billingAddress, ApiResults.COUNTRY);
+                String vatNumber = getValueIfNotNull(billingAddress, ApiResults.VAT_NUMBER);
+                return new CompanyUserBillingAddress(gender, firstName, name, company, street, additionalAddressInfo, postCode, city, state, country,
+                        vatNumber);
+            }
+        }
+        return null;
     }
 }
