@@ -69,6 +69,21 @@ public class LoginSnippetBuilderTest {
 
     /**
      * Test a successful case for {@link LoginSnippetBuilder#build()}
+     * with csrf token
+     */
+    @Test
+    public final void testBuildSuccessfulCaseWithElementId() {
+        LoginConfig loginConfig = new LoginConfig(SAMPLE_URI, DataAccessScope.PROFILE);
+        LoginSnippetBuilder linkBuilder = getBuilder(loginConfig);
+        String builtSnippet = linkBuilder.withElementId("elementId").build();
+        assertNotNull("The generated object is null", builtSnippet);
+        assertFalse("The snippet is blank", builtSnippet.trim().isEmpty());
+        assertTrue("The snippet does not match the expected regex -> " + builtSnippet, builtSnippet.matches(PLENIGO_LOGIN_REGEX_BASIC_SNIPPET));
+    }
+
+
+    /**
+     * Test a successful case for {@link LoginSnippetBuilder#build()}
      * without SSO and CSRF Token.
      */
     @Test

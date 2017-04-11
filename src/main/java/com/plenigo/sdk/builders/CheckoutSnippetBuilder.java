@@ -32,6 +32,12 @@ public class CheckoutSnippetBuilder {
     public static final String DECIMAL_FORMAT = "%.2f";
 
     public static final int PROD_ID_MAX_LENGTH = 20;
+
+    public static final int URL_MAX_LENGTH = 255;
+
+    public static final int AFFILIATE_ID_MAX_LENGTH = 50;
+
+    public static final int ELEMENT_ID_MAX_LENGTH = 100;
     /**
      * The Product object used to build the link.
      */
@@ -78,9 +84,38 @@ public class CheckoutSnippetBuilder {
      * Login token.
      */
     private String loginToken;
+    /**
+     * Product id replacement is started from.
+     */
     private String productIdReplacement;
-    private String segmentId;
 
+    /**
+     * Segment id started from.
+     */
+    private String segmentId;
+    /**
+     * Flag indicating if checkout should start with registration screen.
+     */
+    private Boolean startWithRegistration;
+    /**
+     * Source url checkout is started from.
+     */
+    private String sourceUrl;
+
+    /**
+     * Target to redirect after checkout is finished.
+     */
+    private String targetUrl;
+
+    /**
+     * Element id for embedded checkout.
+     */
+    private String affiliateId;
+
+    /**
+     * Element id for embedded checkout.
+     */
+    private String elementId;
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
@@ -124,11 +159,37 @@ public class CheckoutSnippetBuilder {
             String loginParameter = String.format(CHECKOUT_PARAMETER_TPL, loginToken);
             parameters += CHECKOUT_PARAMETER_SEPARATOR + loginParameter;
             snippetTpl = CHECKOUT_LOGIN_SNIPPET_TPL;
+        } else if (startWithRegistration != null) {
+            String startWithRegistrationParameter = String.format(CHECKOUT_PARAMETER_TPL, Boolean.toString(startWithRegistration));
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + startWithRegistrationParameter;
+        } else {
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + "'null'";
         }
+        parameters = addToParameters(parameters, sourceUrl);
+        parameters = addToParameters(parameters, targetUrl);
+        parameters = addToParameters(parameters, affiliateId);
+        parameters = addToParameters(parameters, elementId);
+
         String snippet = String
                 .format(snippetTpl, parameters);
         LOGGER.log(Level.FINEST, "Built checkout snippet: {0}.", snippet);
         return snippet;
+    }
+
+    /**
+     * @param parameters
+     * @param value
+     *
+     * @return
+     */
+    private String addToParameters(String parameters, String value) {
+        if (SdkUtils.isNotBlank(sourceUrl)) {
+            String sourceUrlParameter = String.format(CHECKOUT_PARAMETER_TPL, sourceUrl);
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + sourceUrlParameter;
+        } else {
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + "'null'";
+        }
+        return parameters;
     }
 
     /**
@@ -333,6 +394,88 @@ public class CheckoutSnippetBuilder {
         this.segmentId = segmentId;
         return this;
     }
+
+    /**
+     * Adds flag indicating if checkout should start with registration screen.
+     *
+     * @param startWithRegistration flag indicating if checkout should start with registration screen
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     */
+    public CheckoutSnippetBuilder withStartWithRegistration(Boolean startWithRegistration) {
+        this.startWithRegistration = startWithRegistration;
+        return this;
+    }
+
+    /**
+     * Adds source url checkout is started from.
+     *
+     * @param sourceUrl source url checkout is started from
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the source url is too long
+     */
+    public CheckoutSnippetBuilder withSourceUrl(String sourceUrl) throws PlenigoException {
+        if (SdkUtils.isBlank(sourceUrl) || sourceUrl.length() > URL_MAX_LENGTH) {
+            throw new PlenigoException(ErrorCode.SOURCE_URL_TOO_LONG);
+        }
+        this.sourceUrl = sourceUrl;
+        return this;
+    }
+
+
+    /**
+     * Adds target to redirect after checkout is finished.
+     *
+     * @param targetUrl target url after checkout is finished
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the target url is too long
+     */
+    public CheckoutSnippetBuilder withTargetUrl(String targetUrl) throws PlenigoException {
+        if (SdkUtils.isBlank(targetUrl) || targetUrl.length() > URL_MAX_LENGTH) {
+            throw new PlenigoException(ErrorCode.SOURCE_URL_TOO_LONG);
+        }
+        this.targetUrl = targetUrl;
+        return this;
+    }
+
+    /**
+     * Adds affiliate id to identify selling source.
+     *
+     * @param affiliateId Affiliate id to identify selling source
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the affiliate Id is too long
+     */
+    public CheckoutSnippetBuilder withAffiliateId(String affiliateId) throws PlenigoException {
+        if (SdkUtils.isBlank(affiliateId) || affiliateId.length() > AFFILIATE_ID_MAX_LENGTH) {
+            throw new PlenigoException(ErrorCode.AFFILIATE_ID_TOO_LONG);
+        }
+        this.affiliateId = affiliateId;
+        return this;
+    }
+
+    /**
+     * Adds element id for embedded checkout.
+     *
+     * @param elementId element id embedded checkout
+     *
+     * @return The same {@link CheckoutSnippetBuilder} instance
+     *
+     * @throws PlenigoException If the element id is too long
+     */
+    public CheckoutSnippetBuilder withElementId(String elementId) throws PlenigoException {
+        if (SdkUtils.isBlank(elementId) || elementId.length() > ELEMENT_ID_MAX_LENGTH) {
+            throw new PlenigoException(ErrorCode.ELEMENT_ID_TOO_LONG);
+        }
+        this.elementId = elementId;
+        return this;
+    }
+
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package com.plenigo.sdk.builders;
 
 
+import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.models.LoginConfig;
 
 import java.util.logging.Level;
@@ -28,10 +29,14 @@ public class LoginSnippetBuilder {
      */
     private String csrfToken;
     /**
+     * The element id to render the plenigo login window as an embedded window.
+     */
+    private String elementId;
+    /**
      * The login event template, this can be interpreted as a javascript
      * snippet.
      */
-    private static final String LOGIN_SNIPPET_TPL = "plenigo.login('%s','%s'%s);";
+    private static final String LOGIN_SNIPPET_TPL = "plenigo.login('%s','%s', '%s','%s');";
 
     /**
      * The login event template, this can be interpreted as a javascript
@@ -78,10 +83,14 @@ public class LoginSnippetBuilder {
         }
         String loginSnippet;
         if (!loginConfig.getRedirectUri().isEmpty()) {
-            loginSnippet = String.format(LOGIN_SNIPPET_TPL, loginConfig.getRedirectUri(), accessScope, stateForSnippet);
+            loginSnippet = String.format(LOGIN_SNIPPET_TPL, loginConfig.getRedirectUri(), accessScope, stateForSnippet, elementId);
         } else {
             LOGGER.log(Level.FINEST, "No redirect uri or token specified, using no arg login snippet");
-            loginSnippet = NO_ARG_LOGIN_SNIPPET;
+            if(SdkUtils.isNotBlank(elementId)) {
+                loginSnippet = String.format(LOGIN_SNIPPET_TPL, "'null'", "'null'", "'null'", elementId);
+            } else {
+                loginSnippet = NO_ARG_LOGIN_SNIPPET;
+            }
         }
         LOGGER.log(Level.FINEST, "Built login snippet: {0}.", loginSnippet);
         return loginSnippet;
@@ -99,6 +108,19 @@ public class LoginSnippetBuilder {
      */
     public LoginSnippetBuilder withCSRFToken(String token) {
         csrfToken = token;
+        return this;
+    }
+
+
+    /**
+     * Add the element id to render the plenigo login window as an embedded window.
+     *
+     * @param elementId  element id to render the plenigo login window as an embedded window
+     *
+     * @return The same {@link LoginSnippetBuilder} instance
+     */
+    public LoginSnippetBuilder withElementId(String elementId) {
+        this.elementId = elementId;
         return this;
     }
 
