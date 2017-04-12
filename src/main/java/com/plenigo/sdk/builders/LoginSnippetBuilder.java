@@ -1,6 +1,5 @@
 package com.plenigo.sdk.builders;
 
-
 import com.plenigo.sdk.internal.util.SdkUtils;
 import com.plenigo.sdk.models.LoginConfig;
 
@@ -77,7 +76,6 @@ public class LoginSnippetBuilder {
         if (loginConfig.getAccessScope() != null) {
             accessScope = loginConfig.getAccessScope().getName();
         }
-
         if (csrfToken != null) {
             stateForSnippet = ",'" + csrfToken + "'";
         }
@@ -96,7 +94,6 @@ public class LoginSnippetBuilder {
         return loginSnippet;
     }
 
-
     /**
      * When this method is called before the {@link LoginSnippetBuilder#build()}
      * method, when the login snippet is built, it will fill out the state parameter of the Javascript SDK
@@ -110,7 +107,6 @@ public class LoginSnippetBuilder {
         csrfToken = token;
         return this;
     }
-
 
     /**
      * Add the element id to render the plenigo login window as an embedded window.

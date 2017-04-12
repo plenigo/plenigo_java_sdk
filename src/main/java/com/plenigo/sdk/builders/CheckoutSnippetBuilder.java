@@ -108,7 +108,7 @@ public class CheckoutSnippetBuilder {
     private String targetUrl;
 
     /**
-     * Element id for embedded checkout.
+     * Affiliate id to identify selling source.
      */
     private String affiliateId;
 
@@ -169,7 +169,6 @@ public class CheckoutSnippetBuilder {
         parameters = addToParameters(parameters, targetUrl);
         parameters = addToParameters(parameters, affiliateId);
         parameters = addToParameters(parameters, elementId);
-
         String snippet = String
                 .format(snippetTpl, parameters);
         LOGGER.log(Level.FINEST, "Built checkout snippet: {0}.", snippet);
@@ -177,10 +176,12 @@ public class CheckoutSnippetBuilder {
     }
 
     /**
-     * @param parameters
-     * @param value
+     * Adds parameter.
      *
-     * @return
+     * @param parameters the parameters
+     * @param value      the value
+     *
+     * @return the parameters
      */
     private String addToParameters(String parameters, String value) {
         if (SdkUtils.isNotBlank(sourceUrl)) {
@@ -254,7 +255,7 @@ public class CheckoutSnippetBuilder {
     }
 
     /**
-     * Fornats the given price to the appropriate decimal format.
+     * Formats the given price to the appropriate decimal format.
      *
      * @param price The price to convert
      *
@@ -424,7 +425,6 @@ public class CheckoutSnippetBuilder {
         return this;
     }
 
-
     /**
      * Adds target to redirect after checkout is finished.
      *
@@ -475,7 +475,6 @@ public class CheckoutSnippetBuilder {
         this.elementId = elementId;
         return this;
     }
-
 
     @Override
     public String toString() {
