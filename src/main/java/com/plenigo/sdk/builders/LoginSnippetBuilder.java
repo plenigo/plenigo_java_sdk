@@ -122,6 +122,10 @@ public class LoginSnippetBuilder {
 
     @Override
     public String toString() {
-        return "LoginSnippetBuilder{" + "loginData=" + loginConfig + ", csrfToken='" + csrfToken + '\'' + '}';
+        return "LoginSnippetBuilder{" +
+                "loginConfig=" + loginConfig +
+                ", csrfToken='" + csrfToken + '\'' +
+                ", elementId='" + elementId + '\'' +
+                '}';
     }
 }

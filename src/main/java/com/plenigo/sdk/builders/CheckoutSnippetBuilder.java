@@ -483,9 +483,23 @@ public class CheckoutSnippetBuilder {
 
     @Override
     public String toString() {
-        return "CheckoutSnippetBuilder{" + "product=" + product + ", alreadyPayedConfirmation=" + alreadyPayedConfirmation
-                + ", paymentConfirmation=" + paymentConfirmation + ", csrfToken='" + csrfToken + '\'' + ", redirectUrl='" + redirectUrl + '\''
-                + ", failedPayments=" + failedPayments + ", shippingCost=" + shippingCost + ", overrideMode=" + overrideMode
-                + ", loginToken='" + loginToken + '\'' + ", productIdReplacement='" + productIdReplacement + '\'' + ", segmentId='" + segmentId + '\'' + '}';
+        return "CheckoutSnippetBuilder{" +
+                "product=" + product +
+                ", alreadyPayedConfirmation=" + alreadyPayedConfirmation +
+                ", paymentConfirmation=" + paymentConfirmation +
+                ", csrfToken='" + csrfToken + '\'' +
+                ", redirectUrl='" + redirectUrl + '\'' +
+                ", failedPayments=" + failedPayments +
+                ", shippingCost=" + shippingCost +
+                ", overrideMode=" + overrideMode +
+                ", loginToken='" + loginToken + '\'' +
+                ", productIdReplacement='" + productIdReplacement + '\'' +
+                ", segmentId='" + segmentId + '\'' +
+                ", startWithRegistration=" + startWithRegistration +
+                ", sourceUrl='" + sourceUrl + '\'' +
+                ", targetUrl='" + targetUrl + '\'' +
+                ", affiliateId='" + affiliateId + '\'' +
+                ", elementId='" + elementId + '\'' +
+                '}';
     }
 }
