@@ -190,8 +190,8 @@ public class CheckoutSnippetBuilder {
      * @return the parameters
      */
     private String addToParameters(String parameters, String value) {
-        if (SdkUtils.isNotBlank(sourceUrl)) {
-            String sourceUrlParameter = String.format(CHECKOUT_PARAMETER_TPL, sourceUrl);
+        if (SdkUtils.isNotBlank(value)) {
+            String sourceUrlParameter = String.format(CHECKOUT_PARAMETER_TPL, value);
             parameters += CHECKOUT_PARAMETER_SEPARATOR + sourceUrlParameter;
         } else {
             parameters += CHECKOUT_PARAMETER_SEPARATOR + "'null'";

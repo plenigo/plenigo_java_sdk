@@ -85,7 +85,7 @@ public class LoginSnippetBuilder {
         } else {
             LOGGER.log(Level.FINEST, "No redirect uri or token specified, using no arg login snippet");
             if(SdkUtils.isNotBlank(elementId)) {
-                loginSnippet = String.format(LOGIN_SNIPPET_TPL, "'null'", "'null'", "'null'", elementId);
+                loginSnippet = String.format(LOGIN_SNIPPET_TPL, "null", "null", "null", elementId);
             } else {
                 loginSnippet = NO_ARG_LOGIN_SNIPPET;
             }
