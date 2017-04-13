@@ -349,7 +349,7 @@ public class CheckoutSnippetBuilderTest {
         Product product = getProduct();
         product.setPrice(15.00);
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
-                .withAffiliateId("affiliate id");
+                .withAffiliateId("affiliateId");
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
@@ -361,7 +361,7 @@ public class CheckoutSnippetBuilderTest {
         Product product = getProduct();
         product.setPrice(15.00);
         CheckoutSnippetBuilder linkBuilder = getBuilder(product)
-                .withElementId("element id");
+                .withElementId("elementId");
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
