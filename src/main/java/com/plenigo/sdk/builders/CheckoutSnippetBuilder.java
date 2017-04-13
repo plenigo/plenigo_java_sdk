@@ -74,7 +74,9 @@ public class CheckoutSnippetBuilder {
     /**
      * Shipping costs related to the product checkout.
      */
+
     private BigDecimal shippingCost;
+
     /**
      * Enables override mode.
      */
@@ -84,6 +86,7 @@ public class CheckoutSnippetBuilder {
      * Login token.
      */
     private String loginToken;
+
     /**
      * Product id replacement is started from.
      */
@@ -93,10 +96,12 @@ public class CheckoutSnippetBuilder {
      * Segment id started from.
      */
     private String segmentId;
+
     /**
      * Flag indicating if checkout should start with registration screen.
      */
     private Boolean startWithRegistration;
+
     /**
      * Source url checkout is started from.
      */
@@ -115,7 +120,9 @@ public class CheckoutSnippetBuilder {
     /**
      * Element id for embedded checkout.
      */
+
     private String elementId;
+
     /**
      * The checkout event template, this can be interpreted as a javascript
      * snippet.
@@ -124,7 +131,6 @@ public class CheckoutSnippetBuilder {
     private static final String CHECKOUT_LOGIN_SNIPPET_TPL = "plenigo.checkoutWithRemoteLogin(%s);";
     private static final String CHECKOUT_PARAMETER_TPL = "'%s'";
     private static final String CHECKOUT_PARAMETER_SEPARATOR = ",";
-
 
     /**
      * This constructor takes a {@link Product} object as a parameter.
@@ -228,7 +234,6 @@ public class CheckoutSnippetBuilder {
                 taxType = product.getTaxType().name();
             }
             LOGGER.log(Level.FINEST, "Tax type: {0}", taxType);
-
             SdkUtils.addIfNotNull(map, ApiParams.PROD_PRICE, price);
             SdkUtils.addIfNotNull(map, ApiParams.CURRENCY, product.getCurrency());
             SdkUtils.addIfNotNull(map, ApiParams.PROD_TAX_TYPE, taxType);

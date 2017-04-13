@@ -21,11 +21,9 @@ public class LoginSnippetBuilderTest {
      * the user calls the {@link LoginSnippetBuilder#build()}
      * method.
      */
-    private static final String PLENIGO_LOGIN_REGEX_BASIC_SNIPPET =
-            "^plenigo\\.login\\s*\\(\\s*'(.*?)\\'\\s*\\)\\s*;$";
+    private static final String PLENIGO_LOGIN_REGEX_BASIC_SNIPPET = "^plenigo\\.login\\s*\\(\\s*'(.*?)\\'\\s*\\)\\s*;$";
     private static final String PLENIGO_LOGIN_NO_ARGS = "plenigo.login();";
     private static final String SAMPLE_URI = "http://sampleuri/resource";
-
 
     /**
      * Returns a mocked builder since the Encryption is not necessary for these unit tests.
@@ -66,7 +64,6 @@ public class LoginSnippetBuilderTest {
         assertTrue("The snippet does not match the expected regex -> " + builtSnippet, builtSnippet.matches(PLENIGO_LOGIN_REGEX_BASIC_SNIPPET));
     }
 
-
     /**
      * Test a successful case for {@link LoginSnippetBuilder#build()}
      * with csrf token
@@ -80,7 +77,6 @@ public class LoginSnippetBuilderTest {
         assertFalse("The snippet is blank", builtSnippet.trim().isEmpty());
         assertTrue("The snippet does not match the expected regex -> " + builtSnippet, builtSnippet.matches(PLENIGO_LOGIN_REGEX_BASIC_SNIPPET));
     }
-
 
     /**
      * Test a successful case for {@link LoginSnippetBuilder#build()}
@@ -96,7 +92,6 @@ public class LoginSnippetBuilderTest {
         assertEquals("The snippet does not match the expected regex -> " + builtSnippet, builtSnippet, PLENIGO_LOGIN_NO_ARGS);
     }
 
-
     /**
      * Test a successful case for {@link LoginSnippetBuilder#build()}
      * without SSO nor CSRF token.
@@ -110,7 +105,6 @@ public class LoginSnippetBuilderTest {
         assertFalse("The snippet is blank", builtSnippet.trim().isEmpty());
         assertEquals("The snippet is not equal to the expected one -> " + builtSnippet, PLENIGO_LOGIN_NO_ARGS, builtSnippet);
     }
-
 
     /**
      * Test toString method
