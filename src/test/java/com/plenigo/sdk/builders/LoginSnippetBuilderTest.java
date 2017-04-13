@@ -6,8 +6,11 @@ import com.plenigo.sdk.internal.util.EncryptionUtils;
 import com.plenigo.sdk.services.TokenService;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 import static org.powermock.api.support.SuppressCode.suppressConstructor;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 /**
  * <p>
