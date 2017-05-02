@@ -97,6 +97,7 @@ public final class UserService {
      * in the case of BAD_REQUEST types, the exception will contain a list of {@link com.plenigo.sdk.models.ErrorDetail}.
      *
      * @param productId          The id of the product to be queried against the user
+     * @param customerId         The customer id
      * @param withExternalUserId The external user id
      *
      * @return True if the external customer has bought the product, otherwise false
@@ -133,8 +134,9 @@ public final class UserService {
      * Checks if a customer can access a product. If there is an error response from the API this will throw a {@link PlenigoException},
      * in the case of BAD_REQUEST types, the exception will contain a list of {@link com.plenigo.sdk.models.ErrorDetail}.
      *
-     * @param productIds The ids of the products to be queried against the user.
-     * @param customerId The customer id of the user.
+     * @param productIds         The ids of the products to be queried against the user.
+     * @param customerId         The customer id of the user.
+     * @param withExternalUserId The external user id.
      *
      * @return True if the user has bought at least one of the product id, otherwise false.
      *
