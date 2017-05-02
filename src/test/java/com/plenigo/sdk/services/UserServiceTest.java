@@ -74,6 +74,7 @@ public class UserServiceTest {
                 Mockito.anyBoolean(), Mockito.anyList(), Mockito.anyBoolean())).thenReturn(true);
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBought("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE));
+        Assert.assertTrue(UserService.hasUserBought(Collections.singletonList("SAMPLE_PROD"), PLENIGO_USER_SAMPLE_COOKIE));
     }
 
     @Test
@@ -86,6 +87,8 @@ public class UserServiceTest {
                 Mockito.anyBoolean(), Mockito.anyList(), Mockito.anyBoolean())).thenReturn(true);
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBoughtByCustomerId("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE, true));
+        Assert.assertTrue(UserService.hasUserBoughtByCustomerId(Collections.singletonList("SAMPLE_PROD"), PLENIGO_USER_SAMPLE_COOKIE, true));
+
     }
 
 
