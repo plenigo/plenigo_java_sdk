@@ -98,7 +98,7 @@ public final class UserService {
      *
      * @param productId          The id of the product to be queried against the user
      * @param customerId         The customer id
-     * @param withExternalUserId The external user id
+     * @param withExternalUserId Flag indicating if the customer id parameter is an internal plenigo id or an external customer id
      *
      * @return True if the external customer has bought the product, otherwise false
      *
@@ -136,7 +136,7 @@ public final class UserService {
      *
      * @param productIds         The ids of the products to be queried against the user.
      * @param customerId         The customer id of the user.
-     * @param withExternalUserId The external user id.
+     * @param withExternalUserId Flag indicating if the customer id parameter is an internal plenigo id or an external customer id
      *
      * @return True if the user has bought at least one of the product id, otherwise false.
      *
