@@ -127,7 +127,7 @@ public final class UserService {
             return false;
         }
         return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customer.getCustomerId(), PlenigoManager.get().getSecret(),
-                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds);
+                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds, false);
     }
 
     /**
@@ -146,7 +146,7 @@ public final class UserService {
         LOGGER.log(Level.FINEST, "Checking if an user has bought a product with the ids: {0} and the customer id: {1}",
                 new Object[]{productIds, customerId});
         return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customerId, PlenigoManager.get().getSecret(),
-                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds);
+                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds, withExternalUserId);
     }
 
     /**
