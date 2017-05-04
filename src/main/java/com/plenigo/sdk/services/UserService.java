@@ -92,6 +92,21 @@ public final class UserService {
         return hasUserBought(Collections.singletonList(productId), cookieHeader);
     }
 
+    /**
+     * Checks if the user can access a product. If there is an error response from the API this will throw a {@link PlenigoException},
+     * in the case of BAD_REQUEST types, the exception will contain a list of {@link com.plenigo.sdk.models.ErrorDetail}.
+     *
+     * @param productId          The id of the product to be queried against the user
+     * @param customerId         The customer id
+     * @param withExternalUserId Flag indicating if the customer id parameter is an internal plenigo id or an external customer id
+     *
+     * @return True if the external customer has bought the product, otherwise false
+     *
+     * @throws com.plenigo.sdk.PlenigoException whenever an error happens
+     */
+    public static boolean hasUserBoughtByCustomerId(String productId, String customerId, boolean withExternalUserId) throws PlenigoException {
+        return hasUserBoughtByCustomerId(Collections.singletonList(productId), customerId, withExternalUserId);
+    }
 
     /**
      * Checks if the user can access a product. If there is an error response from the API this will throw a {@link PlenigoException},
@@ -100,7 +115,7 @@ public final class UserService {
      * @param productIds   The ids of the products to be queried against the user
      * @param cookieHeader The cookie header of the user
      *
-     * @return True if the user in the cookie has bought at least one of the product ids and the session is not expired, false otherwise
+     * @return True if the user in the cookie has bought at least one of the product ids , otherwise false
      *
      * @throws com.plenigo.sdk.PlenigoException whenever an error happens
      */
@@ -112,9 +127,27 @@ public final class UserService {
             return false;
         }
         return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customer.getCustomerId(), PlenigoManager.get().getSecret(),
-                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds);
+                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds, false);
     }
 
+    /**
+     * Checks if a customer can access a product. If there is an error response from the API this will throw a {@link PlenigoException},
+     * in the case of BAD_REQUEST types, the exception will contain a list of {@link com.plenigo.sdk.models.ErrorDetail}.
+     *
+     * @param productIds         The ids of the products to be queried against the user.
+     * @param customerId         The customer id of the user.
+     * @param withExternalUserId Flag indicating if the customer id parameter is an internal plenigo id or an external customer id
+     *
+     * @return True if the user has bought at least one of the product id, otherwise false.
+     *
+     * @throws com.plenigo.sdk.PlenigoException whenever an error happens
+     */
+    public static boolean hasUserBoughtByCustomerId(List<String> productIds, String customerId, boolean withExternalUserId) throws PlenigoException {
+        LOGGER.log(Level.FINEST, "Checking if an user has bought a product with the ids: {0} and the customer id: {1}",
+                new Object[]{productIds, customerId});
+        return internalUserApiService.hasUserBought(PlenigoManager.get().getUrl(), customerId, PlenigoManager.get().getSecret(),
+                PlenigoManager.get().getCompanyId(), PlenigoManager.get().isTestMode(), productIds, withExternalUserId);
+    }
 
     /**
      * Retrieves the user info from the cookie.
@@ -155,7 +188,6 @@ public final class UserService {
         HttpCookie customerCookie = CookieParser.getCustomerCookie(cookieHeader);
         return getCustomerInfo(customerCookie);
     }
-
 
     /**
      * Checks if the customer timestamp has expired.

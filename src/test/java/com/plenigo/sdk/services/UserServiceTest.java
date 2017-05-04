@@ -16,6 +16,7 @@ import com.plenigo.sdk.models.UserData;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -70,10 +71,26 @@ public class UserServiceTest {
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
         Mockito.when(internalUserApiService.hasUserBought(anyString(), anyString(), anyString(), anyString(),
-                Mockito.anyBoolean(), Mockito.anyList())).thenReturn(true);
+                Mockito.anyBoolean(), Mockito.anyList(), Mockito.anyBoolean())).thenReturn(true);
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBought("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE));
+        Assert.assertTrue(UserService.hasUserBought(Collections.singletonList("SAMPLE_PROD"), PLENIGO_USER_SAMPLE_COOKIE));
     }
+
+    @Test
+    public void testSuccessfulHasUserBoughtByCustomerId() throws Exception {
+        configurePlenigoManager();
+
+        UserService instance = Whitebox.invokeConstructor(UserService.class);
+        InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
+        Mockito.when(internalUserApiService.hasUserBought(anyString(), anyString(), anyString(), anyString(),
+                Mockito.anyBoolean(), Mockito.anyList(), Mockito.anyBoolean())).thenReturn(true);
+        ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
+        Assert.assertTrue(UserService.hasUserBoughtByCustomerId("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE, true));
+        Assert.assertTrue(UserService.hasUserBoughtByCustomerId(Collections.singletonList("SAMPLE_PROD"), PLENIGO_USER_SAMPLE_COOKIE, true));
+
+    }
+
 
     @Test
     public void testUnsuccessfulHasUserBoughtWithEmptyData() throws Exception {
@@ -130,7 +147,7 @@ public class UserServiceTest {
         UserService instance = Whitebox.invokeConstructor(UserService.class);
         InternalUserApiService internalUserApiService = Mockito.mock(InternalUserApiService.class);
         Mockito.when(internalUserApiService.hasUserBought(anyString(), anyString(), anyString(), anyString(),
-                Mockito.anyBoolean(), Mockito.anyList())).thenThrow(new PlenigoException(ErrorCode.SERVER, "", null));
+                Mockito.anyBoolean(), Mockito.anyList(), Mockito.anyBoolean())).thenThrow(new PlenigoException(ErrorCode.SERVER, "", null));
         ReflectionTestUtils.setField(instance, "internalUserApiService", internalUserApiService);
         Assert.assertTrue(UserService.hasUserBought("SAMPLE_PROD", PLENIGO_USER_SAMPLE_COOKIE));
     }
