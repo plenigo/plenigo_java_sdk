@@ -194,7 +194,7 @@ public class CheckoutSnippetBuilder {
             String sourceUrlParameter = String.format(CHECKOUT_PARAMETER_TPL, value);
             parameters += CHECKOUT_PARAMETER_SEPARATOR + sourceUrlParameter;
         } else {
-            parameters += CHECKOUT_PARAMETER_SEPARATOR + "'null'";
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + "null";
         }
         return parameters;
     }

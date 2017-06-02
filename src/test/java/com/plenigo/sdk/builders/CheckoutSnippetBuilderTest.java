@@ -42,6 +42,9 @@ public class CheckoutSnippetBuilderTest {
     private static final String PLENIGO_CHECKOUT_REGEX =
             "^plenigo\\.checkout\\('[\\w]+','[\\w]+','[\\w]+','[\\w]+','[\\w]+','[\\w]+'\\);$";
 
+    private static final String PLENIGO_CHECKOUT_REGEX_NULL =
+            "^plenigo\\.checkout\\('[\\w]+',[\\w]+,[\\w]+,[\\w]+,[\\w]+,[\\w]+\\);$";
+
     private static final String PLENIGO_CHECKOUT_REMOTE_REGEX =
             "^plenigo\\.checkoutWithRemoteLogin\\('[\\w]+','[\\w]+','[\\w]+','[\\w]+','[\\w]+','[\\w]+'\\);$";
 
@@ -76,7 +79,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     /**
@@ -129,7 +132,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     /**
@@ -146,7 +149,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
 
     }
 
@@ -164,7 +167,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
 
@@ -181,7 +184,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     @Test
@@ -191,7 +194,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
 
@@ -204,7 +207,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
 
@@ -220,7 +223,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
 
@@ -236,7 +239,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     /**
@@ -272,7 +275,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     @Test(expected = PlenigoException.class)
@@ -305,7 +308,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REMOTE_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkoutWithRemoteLogin\\('[\\w]+','[\\w]+',[\\w]+,[\\w]+,[\\w]+,[\\w]+\\);$"));
     }
 
     @Test
@@ -317,7 +320,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX_NULL));
     }
 
     @Test
@@ -329,7 +332,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkout\\('[\\w]+',[\\w]+,'[\\w]+',[\\w]+,[\\w]+,[\\w]+\\);$"));
     }
 
     @Test
@@ -341,7 +344,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkout\\('[\\w]+',[\\w]+,[\\w]+,'[\\w]+',[\\w]+,[\\w]+\\);$"));
     }
 
     @Test
@@ -353,7 +356,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkout\\('[\\w]+',[\\w]+,[\\w]+,[\\w]+,'[\\w]+',[\\w]+\\);$"));
     }
 
     @Test
@@ -365,7 +368,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkout\\('[\\w]+',[\\w]+,[\\w]+,[\\w]+,[\\w]+,'[\\w]+'\\);$"));
     }
 
     @Test
@@ -377,7 +380,7 @@ public class CheckoutSnippetBuilderTest {
         String builtLink = linkBuilder.build();
         assertNotNull(builtLink, "The generated link is null");
         assertTrue("The link does not match the expected regex -> "
-                + builtLink, builtLink.matches(PLENIGO_CHECKOUT_REGEX));
+                + builtLink, builtLink.matches("^plenigo\\.checkout\\('[\\w]+','[\\w]+',[\\w]+,[\\w]+,[\\w]+,[\\w]+\\);$"));
     }
 
     /**
