@@ -169,7 +169,7 @@ public class CheckoutSnippetBuilder {
             String startWithRegistrationParameter = String.format(CHECKOUT_PARAMETER_TPL, Boolean.toString(startWithRegistration));
             parameters += CHECKOUT_PARAMETER_SEPARATOR + startWithRegistrationParameter;
         } else {
-            parameters += CHECKOUT_PARAMETER_SEPARATOR + "'null'";
+            parameters += CHECKOUT_PARAMETER_SEPARATOR + "null";
         }
         parameters = addToParameters(parameters, sourceUrl);
         parameters = addToParameters(parameters, targetUrl);
