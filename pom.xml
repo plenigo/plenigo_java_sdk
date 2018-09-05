@@ -25,6 +25,15 @@
         <url>git@github.com:plenigo/plenigo_java_sdk.git</url>
     </scm>
 
+    <developers>
+        <developer>
+            <name>Maximilian Schweitzer</name>
+            <email>info@plenigo.com </email>
+            <organization>plenigo GmbH</organization>
+        </developer>
+    </developers>
+
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
